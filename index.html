@@ -1,0 +1,2563 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <title>Mincyt | CNTQ | Alimentación Equina</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="css/bootstrap.min.css" rel="stylesheet">
+  <style TYPE="text/css">
+.bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        user-select: none;
+      }
+
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+
+      .b-example-divider {
+        height: 3rem;
+        background-color: rgba(0, 0, 0, .1);
+        border: solid rgba(0, 0, 0, .15);
+        border-width: 1px 0;
+        box-shadow: inset 0 .5em 1.5em rgba(0, 0, 0, .1), inset 0 .125em .5em rgba(0, 0, 0, .15);
+      }
+
+      .b-example-vr {
+        flex-shrink: 0;
+        width: 1.5rem;
+        height: 100vh;
+      }
+
+      .bi {
+        vertical-align: -.125em;
+        fill: currentColor;
+      }
+
+      .nav-scroller {
+        position: relative;
+        z-index: 2;
+        height: 2.75rem;
+        overflow-y: hidden;
+      }
+
+      .nav-scroller .nav {
+        display: flex;
+        flex-wrap: nowrap;
+        padding-bottom: 1rem;
+        margin-top: -1px;
+        overflow-x: auto;
+        text-align: center;
+        white-space: nowrap;
+        -webkit-overflow-scrolling: touch;
+      }
+
+
+
+  INPUT { font-size: 8pt; font-weight: bold; font-family: arial }
+  SELECT { font-size: 8pt; font-weight: bold; font-family: arial }
+	.input-box {
+		border: #26a solid 1px;
+		font-family: Verdana, Arial, Helvetica, sans-serif;
+		font-weight: bold;
+		font-size: 10px;
+		text-align: right
+	} 
+	.calc-box {
+		color: #26a;
+		background: #feb;
+		border: #26a solid 1px;
+		font-family: Verdana, Arial, Helvetica, sans-serif;
+		font-weight: bold;
+		font-size: 10px;
+		text-align: right
+	}
+
+	.text-box {
+		border: none;
+		font-family: Verdana, Arial, Helvetica, sans-serif;
+		font-weight: bold;
+		font-size: 10px;
+		text-align: left
+	}
+
+	.size2 {
+		font-family: Verdana, Arial, Helvetica, sans-serif;
+		font-weight: bold;
+		font-size: 10px;
+		text-align: left
+	}
+
+
+	.container2 { position: relative; padding: 0px; border: 0px solid black; margin: 0px;height: 400px;width: 650px; }
+	.maincontent { position: absolute; top: 0px; left: 0px; height: 400px; width: 650px;}
+	BODY  {font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 11px; }
+	TABLE { font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 11px; } 
+</style>
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript">
+<!-- 
+	
+	// Vars
+	//--- Define Input variables
+	var menuState = 0;
+	var FeedEditNum =-1;
+	
+	var IntakeLevel =0;
+	var	AnimalType = "TEST";
+	var	AnimalClass = 1;
+	var	BodyWeight = 500;
+	var	Age = 36;
+	var	MatureWeight = 500;
+	var	DailyGain = 0.0;
+	var	WorkLoad = 0;
+	var	BodyCondition = 5;
+	var	InTraining = 0;
+	var	MonthOfGest = 0;
+	var	MonthOfLact = 0;
+	var	Gender = 1;
+	var	Breed = 1;
+	
+	var GestDay = 0;
+	var BirthWeight = 0;
+	var FetalMass = 0;
+	var PUMass = 0;
+	var FetalGain = 0;
+
+	var Ration;
+	Ration = new Array(8);
+
+	var FL_Forage;
+	FL_Forage = new Array();
+
+	var FL_Conc;
+	FL_Conc = new Array();
+
+	var FL_hiFat;
+	FL_hiFat = new Array();
+
+	var FL_MinVit;
+	FL_MinVit = new Array();
+
+	for (var ctr_x1 = 0; ctr_x1 <= 9; ctr_x1++)
+    {
+		Ration[ctr_x1] = new Feed("Blank"+ctr_x1);
+	}
+
+	// 2006 Req vars
+	var DM_req = 0;
+	var DE_req = 0;
+	var CP_req = 0;
+	var LYS_req = 0;
+	var Ca_req = 0;
+	var P_req = 0;
+	var Mg_req = 0;
+	var K_req = 0;
+	var VitA_req = 0;
+
+	var Na_req = 0;
+	var Cl_req = 0;
+	var S_req = 0;
+	var Co_req = 0;
+	var Cu_req = 0;
+	var I_req = 0;
+	var Fe_req = 0;
+	var Mn_req = 0;
+	var Zn_req = 0;
+	var Se_req = 0;
+	var A_req = 0;
+	var D_req = 0;
+	var E_req = 0;
+	var Thi_req = 0;
+	var Ribo_req = 0;
+
+function CalcConv(){
+
+	FromVal = document.theform.frm_Conv_Lbs.value;
+	ToVal = FromVal / 2.204;
+	document.theform.frm_Conv_kg.value = ToVal.toFixed(2);
+
+}
+
+function init()
+{
+	start_up();
+	
+	enterAsTab();
+
+	document.theform.frm_BodyWeight.value = BodyWeight;
+
+	menu('TitlePage');
+	calcVals();
+		setRation();
+		initFeedTable();
+	SetFeedLib();
+}
+
+function setdef()
+{
+//		document.theform.frm_Status.focus();
+//		document.theform.frm_Status.blur();
+//		document.theform.frm_Status.select();
+}
+
+function validateForm() 
+{
+	// Check length and range of txtFCM
+
+	// Check length and range of txtBW
+	if (document.theform.frm_BodyWeight.value.length == "0" || document.theform.frm_BodyWeight.value < 0 || document.theform.frm_BodyWeight.value > 2000)
+	{
+		alert("\nYou must enter valid Body Weight.");
+		document.theform.frm_BodyWeight.focus();
+		document.theform.frm_BodyWeight.blur();
+		document.theform.frm_BodyWeight.select();
+		return false;
+	}
+}
+
+function validateCalc()
+{
+	if (validateForm() != false)
+	{
+		calcVals();
+	}
+}
+
+function menu(x)
+{
+	var div1;
+	cmenu();
+	menuState = 0;	
+	
+	if(x=="AnimalSpec")	
+	{
+		menuState = 1;
+		div1=document.getElementById("AnimalSpec");
+		eval("div1.style.visibility='visible'");
+		calcVals();
+	}
+	
+	if(x=='DietSpec')
+	{
+		menuState = 2;
+		div1=document.getElementById("DietSpec");
+		eval("div1.style.visibility='visible'");
+		calcVals();
+	}
+
+	if(x=='MinVit')
+	{
+		menuState = 2;
+		div1=document.getElementById("MinVit");
+		eval("div1.style.visibility='visible'");
+		calcVals();
+	}
+
+	if(x=='LegalStuff')
+	{
+		menuState = 2;
+		div1=document.getElementById("LegalStuff");
+		eval("div1.style.visibility='visible'");
+		calcVals();
+	}
+
+	if(x=='TitlePage')
+	{
+		menuState = 2;
+		div1=document.getElementById("TitlePage");
+		eval("div1.style.visibility='visible'");
+		calcVals();
+	}
+
+	if(x=='ProgramOps')
+	{
+		menuState = 2;
+		div1=document.getElementById("ProgramOps");
+		eval("div1.style.visibility='visible'");
+		calcVals();
+	}
+
+
+}
+
+function cmenu()
+{
+	var div1;
+	var div2;
+	var div3;
+	var div4;
+	var div5;
+	var div6;
+	
+	div1 =document.getElementById("DietSpec");
+	div2 =document.getElementById("AnimalSpec");
+	div3 =document.getElementById("FeedPick");
+	div4 =document.getElementById("MinVit");
+	div5 =document.getElementById("LegalStuff");
+	div6 =document.getElementById("TitlePage");
+	div7 =document.getElementById("ProgramOps");
+	div8 =document.getElementById("ConvMetric");
+
+
+
+	eval("div1.style.visibility='hidden'");
+	eval("div2.style.visibility='hidden'");
+	eval("div3.style.visibility='hidden'");
+	eval("div4.style.visibility='hidden'");
+	eval("div5.style.visibility='hidden'");
+	eval("div6.style.visibility='hidden'");
+	eval("div7.style.visibility='hidden'");
+	eval("div8.style.visibility='hidden'");
+}
+
+function initFeedTable(){
+	var tmpElement;
+	var ctr;
+
+	var tmpDM =0.0;
+	var tmpDE =0.0;
+	var tmpCP =0.0;
+	var tmpLys =0.0;
+	var tmpCa =0.0;
+	var tmpP =0.0;
+	var tmpMg =0.0;
+	var tmpK =0.0;
+	var tmpVitA =0.0;
+
+	var tmpNa =0.0;
+	var tmpCl =0.0;
+
+
+	for (var x = 0; x <= 7; x++)
+	{
+		eval('document.theform.frm_Feed'+x+'_Amt.value = Ration[x].FeedAmt.toFixed(2)');
+		eval('document.theform.frm_Feed'+x+'_Name.value = Ration[x].FeedName');
+		eval('document.theform.frm_Feed'+x+'_DM.value = Ration[x].FeedDM');
+		eval('document.theform.frm_Feed'+x+'_DE.value = Ration[x].FeedDE');
+		eval('document.theform.frm_Feed'+x+'_CP.value = Ration[x].FeedCP');
+		eval('document.theform.frm_Feed'+x+'_Lys.value = Ration[x].FeedLys');
+		eval('document.theform.frm_Feed'+x+'_Ca.value = Ration[x].FeedCa');
+		eval('document.theform.frm_Feed'+x+'_P.value = Ration[x].FeedP');
+		eval('document.theform.frm_Feed'+x+'_Na.value = Ration[x].FeedNa');
+		eval('document.theform.frm_Feed'+x+'_Cl.value = Ration[x].FeedCl');
+		eval('document.theform.frm_Feed'+x+'_K.value = Ration[x].FeedK');
+
+		tmpDM = tmpDM + Ration[x].FeedAmt * (Ration[x].FeedDM/100);
+		tmpDE = tmpDE + Ration[x].FeedAmt * (Ration[x].FeedDM/100)* Ration[x].FeedDE;
+		tmpCP = tmpCP + Ration[x].FeedAmt * (Ration[x].FeedDM/100)* Ration[x].FeedCP * 1000 / 100;
+		tmpLys = tmpLys + Ration[x].FeedAmt * (Ration[x].FeedDM/100)* Ration[x].FeedLys * 1000 / 100;
+		tmpCa = tmpCa + Ration[x].FeedAmt * (Ration[x].FeedDM/100)* Ration[x].FeedCa * 1000 / 100;
+		tmpP = tmpP + Ration[x].FeedAmt * (Ration[x].FeedDM/100)* Ration[x].FeedP * 1000 / 100;
+		tmpNa = tmpNa + Ration[x].FeedAmt * (Ration[x].FeedDM/100)* Ration[x].FeedNa * 1000 / 100;
+		tmpCl = tmpCl + Ration[x].FeedAmt * (Ration[x].FeedDM/100)* Ration[x].FeedCl * 1000 / 100;
+		tmpK = tmpK + Ration[x].FeedAmt * (Ration[x].FeedDM/100)* Ration[x].FeedK * 1000 / 100;
+	}
+
+	document.theform.frm_Feed_TotDM.value = tmpDM.toFixed(2);
+	document.theform.frm_Feed_TotDE.value = tmpDE.toFixed(2);
+	document.theform.frm_Feed_TotCP.value = tmpCP.toFixed(0);
+	document.theform.frm_Feed_TotLys.value = tmpLys.toFixed(0);
+	document.theform.frm_Feed_TotCa.value = tmpCa.toFixed(0);
+	document.theform.frm_Feed_TotP.value = tmpP.toFixed(0);
+	document.theform.frm_Feed_TotNa.value = tmpNa.toFixed(1);
+	document.theform.frm_Feed_TotCl.value = tmpCl.toFixed(1);
+	document.theform.frm_Feed_TotK.value = tmpK.toFixed(1);
+
+	tmpDM = document.theform.frm_Feed_TotDM.value - document.theform.frm_Feed_ReqDM.value;
+	tmpDE = document.theform.frm_Feed_TotDE.value - document.theform.frm_Feed_ReqDE.value;
+	tmpCP = document.theform.frm_Feed_TotCP.value - document.theform.frm_Feed_ReqCP.value;
+	tmpLys = document.theform.frm_Feed_TotLys.value - document.theform.frm_Feed_ReqLys.value;
+	tmpCa = document.theform.frm_Feed_TotCa.value - document.theform.frm_Feed_ReqCa.value;
+	tmpP = document.theform.frm_Feed_TotP.value - document.theform.frm_Feed_ReqP.value;
+	tmpNa = document.theform.frm_Feed_TotNa.value - document.theform.frm_Feed_ReqNa.value;
+	tmpCl = document.theform.frm_Feed_TotCl.value - document.theform.frm_Feed_ReqCl.value;
+	tmpK = document.theform.frm_Feed_TotK.value - document.theform.frm_Feed_ReqK.value;
+
+	document.theform.frm_Feed_DiffDM.value = tmpDM.toFixed(2);
+	document.theform.frm_Feed_DiffDE.value = tmpDE.toFixed(2);
+	document.theform.frm_Feed_DiffCP.value = tmpCP.toFixed(0);
+	document.theform.frm_Feed_DiffLys.value = tmpLys.toFixed(0);
+	document.theform.frm_Feed_DiffCa.value = tmpCa.toFixed(0);
+	document.theform.frm_Feed_DiffP.value = tmpP.toFixed(0);
+	document.theform.frm_Feed_DiffNa.value = tmpNa.toFixed(0);
+	document.theform.frm_Feed_DiffCl.value = tmpCl.toFixed(0);
+	document.theform.frm_Feed_DiffK.value = tmpK.toFixed(1);
+
+}
+
+function CalcRation(){
+	var tmpElement;
+	var ctr;
+
+	var tmpDM =0.0;
+	var tmpDE =0.0;
+	var tmpCP =0.0;
+	var tmpLys =0.0;
+	var tmpCa =0.0;
+	var tmpP =0.0;
+	var tmpMg =0.0;
+	var tmpK =0.0;
+	var tmpVitA =0.0;
+	var tmpNa =0.0;
+	var tmpCl =0.0;
+
+	for (var x = 0; x <= 7; x++)
+	{
+		eval('Ration[x].FeedAmt = parseFloat(document.theform.frm_Feed'+x+'_Amt.value)');
+		eval('Ration[x].FeedName =document.theform.frm_Feed'+x+'_Name.value');
+		eval('Ration[x].FeedDM = parseFloat(document.theform.frm_Feed'+x+'_DM.value)');
+		eval('Ration[x].FeedDE = parseFloat(document.theform.frm_Feed'+x+'_DE.value)');
+		eval('Ration[x].FeedCP = parseFloat(document.theform.frm_Feed'+x+'_CP.value)');
+		eval('Ration[x].FeedLys = parseFloat(document.theform.frm_Feed'+x+'_Lys.value)');
+		eval('Ration[x].FeedCa = parseFloat(document.theform.frm_Feed'+x+'_Ca.value)');
+		eval('Ration[x].FeedP = parseFloat(document.theform.frm_Feed'+x+'_P.value)');
+		eval('Ration[x].FeedNa = parseFloat(document.theform.frm_Feed'+x+'_Na.value)');
+		eval('Ration[x].FeedCl = parseFloat(document.theform.frm_Feed'+x+'_Cl.value)');
+
+		eval('Ration[x].FeedK = parseFloat(document.theform.frm_Feed'+x+'_K.value)');
+
+		tmpDM = tmpDM + Ration[x].FeedAmt * (Ration[x].FeedDM/100);
+		tmpDE = tmpDE + Ration[x].FeedAmt * (Ration[x].FeedDM/100)* Ration[x].FeedDE;
+		tmpCP = tmpCP + Ration[x].FeedAmt * (Ration[x].FeedDM/100)* Ration[x].FeedCP * 1000 / 100;
+		tmpLys = tmpLys + Ration[x].FeedAmt * (Ration[x].FeedDM/100)* Ration[x].FeedLys * 1000 / 100;
+		tmpCa = tmpCa + Ration[x].FeedAmt * (Ration[x].FeedDM/100)* Ration[x].FeedCa * 1000 / 100;
+		tmpP = tmpP + Ration[x].FeedAmt * (Ration[x].FeedDM/100)* Ration[x].FeedP * 1000 / 100;
+		tmpNa = tmpNa + Ration[x].FeedAmt * (Ration[x].FeedDM/100)* Ration[x].FeedNa * 1000 / 100;
+		tmpCl = tmpCl + Ration[x].FeedAmt * (Ration[x].FeedDM/100)* Ration[x].FeedCl * 1000 / 100;
+		tmpK = tmpK + Ration[x].FeedAmt * (Ration[x].FeedDM/100)* Ration[x].FeedK * 1000 / 100;
+	}
+
+	document.theform.frm_Feed_TotDM.value = tmpDM .toFixed(2);
+	document.theform.frm_Feed_TotDE.value = tmpDE.toFixed(2);
+	document.theform.frm_Feed_TotCP.value = tmpCP.toFixed(0);
+	document.theform.frm_Feed_TotLys.value = tmpLys.toFixed(0);
+	document.theform.frm_Feed_TotCa.value = tmpCa.toFixed(0);
+	document.theform.frm_Feed_TotP.value = tmpP.toFixed(0);
+	document.theform.frm_Feed_TotNa.value = tmpNa.toFixed(1);
+	document.theform.frm_Feed_TotCl.value = tmpCl.toFixed(1);
+	document.theform.frm_Feed_TotK.value = tmpK.toFixed(1);
+
+	tmpDM = document.theform.frm_Feed_TotDM.value - document.theform.frm_Feed_ReqDM.value;
+	tmpDE = document.theform.frm_Feed_TotDE.value - document.theform.frm_Feed_ReqDE.value;
+	tmpCP = document.theform.frm_Feed_TotCP.value - document.theform.frm_Feed_ReqCP.value;
+	tmpLys = document.theform.frm_Feed_TotLys.value - document.theform.frm_Feed_ReqLys.value;
+	tmpCa = document.theform.frm_Feed_TotCa.value - document.theform.frm_Feed_ReqCa.value;
+	tmpP = document.theform.frm_Feed_TotP.value - document.theform.frm_Feed_ReqP.value;
+	tmpNa = document.theform.frm_Feed_TotNa.value - document.theform.frm_Feed_ReqNa.value;
+	tmpCl = document.theform.frm_Feed_TotCl.value - document.theform.frm_Feed_ReqCl.value;
+	tmpK = document.theform.frm_Feed_TotK.value - document.theform.frm_Feed_ReqK.value;
+
+	document.theform.frm_Feed_DiffDM.value = tmpDM.toFixed(2);
+	document.theform.frm_Feed_DiffDE.value = tmpDE.toFixed(2);
+	document.theform.frm_Feed_DiffCP.value = tmpCP.toFixed(0);
+	document.theform.frm_Feed_DiffLys.value = tmpLys.toFixed(0);
+	document.theform.frm_Feed_DiffCa.value = tmpCa.toFixed(0);
+	document.theform.frm_Feed_DiffP.value = tmpP.toFixed(0);
+	document.theform.frm_Feed_DiffNa.value = tmpNa.toFixed(1);
+	document.theform.frm_Feed_DiffCl.value = tmpCl.toFixed(1);
+	document.theform.frm_Feed_DiffK.value = tmpK.toFixed(1);
+
+}
+
+function Feed(name) {
+	// Used Blank as template
+	this.FeedAmt = 0.0;
+	this.FeedName = name;
+	this.FeedDM = 0.0;
+	this.FeedDE = 0.00;
+	this.FeedCP = 0.0;
+	this.FeedLys = 0.00;   // Arbitrary number - not from table
+	this.FeedCa = 0.00;
+	this.FeedP = 0.00;		// Arbitrary number - not from table
+	this.FeedMg = 0.00;
+	this.FeedK = 0.0;
+	this.FeedVitA = 0;		// Arbitrary number - not from table
+	this.FeedNa = 0; 
+	this.FeedCl = 0; 
+} 
+
+Feed.prototype.toString = function() {
+	var retval;
+	
+	retval = "FD," + this.FeedAmt.toFixed(2) +",";
+	retval = retval + this.FeedName +",";
+	retval = retval + this.FeedDM.toFixed(2) +",";
+	retval = retval + this.FeedDE.toFixed(2) +",";
+	retval = retval + this.FeedCP.toFixed(2) +",";
+	retval = retval + this.FeedLys.toFixed(2) +",";
+	retval = retval + this.FeedCa.toFixed(2) +",";
+	retval = retval + this.FeedP.toFixed(2) +",";
+	retval = retval + this.FeedNa.toFixed(2) 
+	retval = retval + this.FeedCl.toFixed(2) 
+	retval = retval + this.FeedK.toFixed(2) +",";
+	return retval;
+}
+
+Feed.prototype.fromString = function(inStr) {
+	var testval;
+	var tmpArr;
+	
+	testval = "FD,0.00,TESTFROM,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00"
+	testval = inStr;
+	tmpArr = testval.split(",");
+	
+	this.FeedAmt = tmpArr[1] - 0;
+	this.FeedName = tmpArr[2];
+	this.FeedDM = tmpArr[3] - 0;
+	this.FeedDE = tmpArr[4]- 0;
+	this.FeedCP = tmpArr[5]- 0;
+	this.FeedLys = tmpArr[6]- 0;
+	this.FeedCa = tmpArr[7] - 0;
+	this.FeedP = tmpArr[8] - 0;
+	this.FeedNa = tmpArr[9] - 0; 
+	this.FeedCl = tmpArr[10] - 0; 
+	this.FeedK = tmpArr[11] - 0;
+	this.FeedMg = 0;
+	this.FeedVitA = 0; 
+	return 0;
+}
+
+function start_up() {
+
+	var tstMsg = "";
+	tstMsg = "Información de Interés:"
+	tstMsg = tstMsg + "\n\nEl conocimiento de las restricciones y limitaciones nutricionales es esencial para el uso adecuado de los requerimientos de nutrientes en las tablas y especialmente en las generadas por los programas informáticos."
+	tstMsg = tstMsg + "\n\nDebido a las numerosas variables que intervienen y a los juicios que deben hacerse al elegir los datos de entrada e interpretar los resultados, el NRC no se hace responsable de la exactitud de este software y el usuario es el único responsable del riesgo de su uso."
+	tstMsg = tstMsg + "\n\nClick en 'OK' para Aceptar\n"
+	tstMsg = tstMsg + "\n\nClick en 'Cancelar' para ir a la WEB del CNTQ\n"
+
+	if (confirm(tstMsg)) {
+//		alert("Passed");
+	} else {
+		location.replace("http://www.cntq.gob.ve");
+	}
+}
+
+
+//  End -->
+
+</script>
+</head>
+<body onLoad="init()">
+<header>
+  <div class="collapse bg-dark" id="navbarHeader">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-8 col-md-7 py-4">
+          <h4 class="text-white">Mincyt | Centro Nacional de Tecnología Química</h4>
+          <p class="text-light">
+            Un aporte de la Oficina de Atención al Ciudadano > <strong>Dirección de Participación Ciudadana</strong>
+          </p>
+        </div>
+        <div class="col-sm-4 offset-md-1 py-4">
+          <h4 class="text-white">Más Cálculos</h4>
+          <ul class="list-unstyled">
+            <li><a href="#" onClick="menu('AnimalSpec'); return false"><strong>Especificación del Animal</strong></a></li>
+            <li><a href="#" onClick="menu('DietSpec'); return false"><strong>Suministro Dietético</strong></a></li>
+            <li><a href="#" onClick="menu('MinVit'); return false"><strong>Otros Nutrientes</strong></a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="navbar navbar-dark bg-dark shadow-sm">
+    <div class="container">
+      <a href="#" onClick="menu('TitlePage'); return false" class="navbar-brand d-flex align-items-center">
+        <img src="img/mincyt.png" width="110" height="50">
+        <strong>Requerimientos Nutricionales para Equinos</strong>
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarHeader" aria-controls="navbarHeader" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+  <div class="shadow-lg bg-light p-3 mb-5 rounded">
+<form name="theform" method="POST" action="">
+<input type="hidden" name="frm_Flag" Value="TRUE">
+
+
+
+  <center>
+  <table border="1" cellpadding="0" cellspacing="0" width="650" id="MenuArea">
+    <tr>
+      <td width="650" height="300" align="center">
+
+<div class="container2">
+<div align="center" ID="AnimalSpec" class="maincontent" style="visibility: hidden">
+<p align="center"><font face="Arial"><b>Especificación del Animal</b></font></p>
+<table border="0" cellpadding="0" align="center" cellspacing="0" width="90%" id="tbl_inputs" >
+	<tr>
+		<td align="left" height="19" colspan="2">&nbsp;</td>
+	</tr>
+	<tr>
+		<td align="left" height="19"><font face="Arial" size="1"><b>
+        <input type="text" name="frm_MatureWeight" size="5" value="500" onChange="validateCalc()" class="input-box"></b></font><b><font face="Arial" size="2"> </font>
+        <font face="Arial">Mature 
+        Weight, kg</font></b></td>
+		<td align="left" height="19">
+			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b><font face="Arial" size="1">
+        <input type="text" name="frm_BodyWeight" size="5" value="500" onChange="validateCalc()" class="calc-box"></font><font face="Arial" size="2"> </font>
+            <font face="Arial" size="1">
+            <input type="text" name="frm_TxtGrow2" class="text-box" size="50" value="Estimated Actual Weight, kg"></font></b></td>
+	</tr>
+	<tr>
+		<td align="left" height="19"><b><font face="Arial" size="1"> 
+        <select size="1" name="frm_IntakeLevel" onChange="validateCalc()" class="input-box">
+        <option value="1.50">1.50 %</option>
+        <option value="1.75">1.75 %</option>
+        <option selected value="2.00">2.00 %</option>
+        <option value="2.25">2.25 %</option>
+        <option value="2.50">2.50 %</option>
+        <option value="2.75">2.75 %</option>
+        <option value="3.00">3.00 %</option>
+        </select></font><font face="Arial" size="2"> </font><font face="Arial">Intake Level, % BW</font></b></td>
+		<td align="left" height="19">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+			<b><font face="Arial" size="1"> 
+        <input type="text" name="frm_DailyGain" size="5" value="0.0" onChange="validateCalc()" class="calc-box"><font face="Arial" size="2"> </font></font>
+        <font face="Arial" size="1">
+        <input type="text" name="frm_txtDailyGain" size="50" class="text-box" value="Estimated Weight change / Milk Prod, kg/d"></font></b></td>
+	</tr>
+	<tr>
+		<td align="left" height="19">&nbsp;</td>
+		<td align="left" height="19">
+			&nbsp;</td>
+	</tr>
+	<tr>
+		<td align="left" height="22">
+<font face="Arial"><font size="1"><b>
+    <input type="radio" value="MAINTENANCE" name="R1" onClick="validateCalc()" checked></b></font><b>Adult 
+at Maintenance</b></font></td>
+		<td align="left" height="22"><b><font face="Arial" size="1"> <select size="1" name="frm_LevMaint" onChange="validateCalc()">
+        <option value="1">Low</option>
+        <option selected value="2">Average</option>
+        <option value="3">High</option>
+        </select></font></b></td>
+	</tr>
+	<tr>
+		<td align="left" height="22">
+<font face="Arial"><font size="1"><b>
+    <input type="radio" value="STALLION" name="R1" onClick="validateCalc()" ></b></font><b>Stallion</b></font></td>
+		<td align="left" height="22"><font face="Arial" size="1">
+        <b>
+        <select size="1" name="frm_StallionType" onChange="validateCalc()">
+			<option value = "0">Non-Breeding</option>
+			<option value = "1">Breeding</option>
+			</select></b></font></td>
+	</tr>
+	<tr>
+		<td align="left" height="22">
+    <b>
+    <font size="1" face="Arial">
+    <input type="radio" name="R1" value="GROWING"  onClick="validateCalc()"></font><font face="Arial">Growing</font></b></td>
+		<td align="left" height="22"><b>
+       <font face="Arial" size="1">
+        <select size="1" name="frm_Age2" onChange="SetGrow();validateCalc()">
+			<option value = "1">1 Month</option>
+			<option value = "2">2 Months</option>
+			<option value = "3">3 Months</option>
+			<option value = "4">4 Months</option>
+            <option value = "5">5 Months</option>
+            <option value = "6">6 Months</option>
+            <option value = "7">7 Months</option>
+			<option selected value="8">8 Months</option>
+			<option  value="9">9 Months</option>
+			<option  value="10">10 Months</option>
+			<option  value="11">11 Months</option>
+			<option value = "12">12 Months</option>
+			<option value = "13">13 Months</option>
+			<option value = "14">14 Months</option>
+			<option value = "15">15 Months</option>
+			<option value = "16">16 Months</option>
+			<option value = "17">17 Months</option>
+			<option value = "18">18 Months</option>
+			<option value = "19">19 Months</option>
+			<option value = "20">20 Months</option>
+			<option value = "21">21 Months</option>
+			<option value = "22">22 Months</option>
+			<option value = "23">23 Months</option>
+			<option value = "24">24 Months</option>
+			<option value = "25">25 Months</option>
+			<option value = "26">26 Months</option>
+			</select><input type="text" name="frm_TxtGrow" size="15" value=" of Age"></font><font face="Arial" size="2"> </font> <font face="Arial" size="2">&nbsp;</font></b>
+			<b>
+			<font face="Arial" size="1">
+			<select size="1" name="frm_WorkLoad_grow"  onChange="validateCalc()">
+			<option selected value="0">None</option>
+			<option value="1">Light</option>
+	    	<option  value="2">Moderate</option>
+    	    <option  value="3">Heavy</option>
+        	<option  value="4">Intense</option>
+            </select>
+			<input type="text" name="frm_TxtWork_grow" size="15" value="Work Load"></font></b></td>
+	</tr>
+	<tr>
+		<td align="left" height="22">
+    <p>
+    <b>
+    <font size="1" face="Arial">
+	<input type="radio" name="R1" value="PREGNANT" onClick="validateCalc()"></font><font face="Arial">Pregnant</font></b></td>
+		<td align="left" height="22"><b><font face="Arial" size="1"><select size="1" name="frm_MonthOfGest" onChange="validateCalc()">
+			<option value = "2">Early</option>
+            <option value = "5">5 Months</option>
+            <option value = "6">6 Months</option>
+            <option value = "7">7 Months</option>
+			<option selected value="8">8 months</option>
+			<option  value="9">9 months</option>
+			<option  value="10">10 months</option>
+			<option  value="11">11 months</option>
+			</select></font><font face="Arial" size="2"> </font><font face="Arial" size="1"> 
+        <input type="text" name="frm_TxtPreg" size="15" value="of Gestation"></font></b></td>
+	</tr>
+	<tr>
+		<td align="left" height="22">
+    <b>
+    <font size="1" face="Arial">
+    <input type="radio" name="R1" value="LACTATING"  onClick="validateCalc()"></font><font face="Arial">Lactating&nbsp;</font></b></td>
+		<td align="left" height="22"><b><font face="Arial" size="1"><select size="1" name="frm_MonthOfLact" onChange="validateCalc()">
+			<option selected  value="1">1st month</option>
+			<option  value="2">2nd month</option>
+			<option  value="3">3rd month</option>
+			<option  value="4">4th month</option>
+			<option  value="5">5th month</option>
+			<option  value="6">6th month</option>
+			</select></font><font face="Arial" size="2"> </font><font face="Arial" size="1"> 
+        <input type="text" name="frm_TxtLact" size="15" value="of Lactation"></font></b></td>
+	</tr>
+	<tr>
+		<td align="left" height="22">
+    <b>
+    <font size="1" face="Arial">
+    <input type="radio" name="R1" value="EXERCISE"  onClick="validateCalc()"></font><font face="Arial">Working/Training</font></b></td>
+		<td align="left" height="22">
+			<b>
+			<font face="Arial" size="1">
+			<select size="1" name="frm_WorkLoad"  onChange="validateCalc()">
+			<option selected value="1">Light</option>
+	    	<option  value="2">Moderate</option>
+    	    <option  value="3">Heavy</option>
+        	<option  value="4">Intense</option>
+            </select></font><font face="Arial" size="2">&nbsp; </font>
+			<font face="Arial" size="1">
+			<input type="text" name="frm_TxtWork" size="15" value="Work Load"></font></b></td>
+	</tr>
+	</table><br>
+</div>
+
+
+
+<div align="center" ID="DietSpec"  class="maincontent" style="visibility: hidden">
+<p align="center"><font face="Arial"><b><br>
+Dietary Supply</b></font></p>
+<table border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse"  width="100%" id="AutoNumber11">
+    <tr>
+      <td width="30%" align="center"><b><font face="Arial">Feed Name</font></b></td>
+      <td width="7%" align="center"><b><font face="Arial">Amt</font></b></td>
+      <td width="7%" align="center"><b><font face="Arial">DM</font></b></td>
+      <td width="7%" align="center"><b><font face="Arial">DE</font></b></td>
+      <td width="7%" align="center"><b><font face="Arial">CP</font></b></td>
+      <td width="7%" align="center"><b><font face="Arial">Lys</font></b></td>
+      <td width="7%" align="center"><b><font face="Arial">Ca</font></b></td>
+      <td width="7%" align="center"><b><font face="Arial">P </font></b></td>
+      <td width="7%" align="center"><b><font face="Arial">Na</font></b></td>
+      <td width="7%" align="center"><b><font face="Arial">Cl</font></b></td>
+      <td width="7%" align="center"><b><font face="Arial">K</font></b></td>
+    </tr>
+    <tr>
+      <td width="30%" align="center">&nbsp;</td>
+      <td width="7%" align="center"><b><font face="Arial">kg</font></b></td>
+      <td width="7%" align="center"><b><font face="Arial">%</font></b></td>
+      <td width="7%" align="center"><b><font face="Arial">Mcal/kg</font></b></td>
+      <td width="7%" align="center"><b><font face="Arial">%</font></b></td>
+      <td width="7%" align="center"><b><font face="Arial">%</font></b></td>
+      <td width="7%" align="center"><b><font face="Arial">%</font></b></td>
+      <td width="7%" align="center"><b><font face="Arial">%</font></b></td>
+      <td width="7%" align="center"><b><font face="Arial">%</font></b></td>
+      <td width="7%" align="center"><b><font face="Arial">%</font></b></td>
+      <td width="7%" align="center"><b><font face="Arial">%</font></b></td>
+    </tr>
+    <tr>
+      <td width="30%" align="center">&nbsp;</td>
+      <td width="7%" align="center">&nbsp;</td>
+      <td width="7%" align="center">&nbsp;</td>
+      <td width="7%" align="center">&nbsp;</td>
+      <td width="7%" align="center">&nbsp;</td>
+      <td width="7%" align="center">&nbsp;</td>
+      <td width="7%" align="center">&nbsp;</td>
+      <td width="7%" align="center">&nbsp;</td>
+      <td width="7%" align="center">&nbsp;</td>
+      <td width="7%" align="center">&nbsp;</td>
+      <td width="7%" align="center">&nbsp;</td>
+    </tr>
+    <tr>
+      <td width="30%" align="left">
+      <input type="text" name="frm_Feed0_Name" size="20" value="" class="input-box" >&nbsp;&nbsp;<input type="button" value="NEW" name="FeedNew_0" onclick="importFeed(0)" class="input-box"></td>
+      <td width="7%" align="right"><font face="Arial"><b>
+      <input type="text" name="frm_Feed0_Amt" size="4" value="" class="input-box" onChange="CalcRation()"></b></font></td>
+      <td width="7%" align="right"><font face="Arial"><b>
+      <input type="text" name="frm_Feed0_DM" size="4" value="" class="input-box" onChange="CalcRation()"></b></font></td>
+      <td width="7%" align="right"><font face="Arial"><b>
+      <input type="text" name="frm_Feed0_DE" size="4" value="" class="input-box" onChange="CalcRation()"></b></font></td>
+      <td width="7%" align="right"><font face="Arial"><b>
+      <input type="text" name="frm_Feed0_CP" size="4" value="" class="input-box" onChange="CalcRation()"></b></font></td>
+      <td width="7%" align="right"><font face="Arial"><b>
+      <input type="text" name="frm_Feed0_Lys" size="4" value="" class="input-box" onChange="CalcRation()"></b></font></td>
+      <td width="7%" align="right"><font face="Arial"><b>
+      <input type="text" name="frm_Feed0_Ca" size="4" value="" class="input-box" onChange="CalcRation()"></b></font></td>
+      <td width="7%" align="right"><font face="Arial"><b>
+      <input type="text" name="frm_Feed0_P" size="4" value="" class="input-box" onChange="CalcRation()"></b></font></td>
+      <td width="7%" align="right"><font face="Arial"><b>
+      <input type="text" name="frm_Feed0_Na" size="4" value="" class="input-box" onChange="CalcRation()"></b></font></td>
+      <td width="7%" align="right"><font face="Arial"><b>
+      <input type="text" name="frm_Feed0_Cl" size="4" value="" class="input-box" onChange="CalcRation()"></b></font></td>
+      <td width="7%" align="right"><font face="Arial"><b>
+      <input type="text" name="frm_Feed0_K" size="4" value="" class="input-box" onChange="CalcRation()"></b></font></td>
+    </tr>
+    <tr>
+      <td width="30%" align="left">
+      <input type="text" name="frm_Feed1_Name" size="20" value="" class="input-box" onChange="CalcRation()">&nbsp;&nbsp;<input type="button" value="NEW" name="FeedNew_1" onclick="importFeed(1)" class="input-box"></td>
+      <td width="7%" align="right"><font face="Arial"><b>
+      <input type="text" name="frm_Feed1_Amt" size="4" value="" class="input-box" onChange="CalcRation()"></b></font></td>
+      <td width="7%" align="right"><font face="Arial"><b>
+      <input type="text" name="frm_Feed1_DM" size="4" value="" class="input-box" onChange="CalcRation()"></b></font></td>
+      <td width="7%" align="right"><font face="Arial"><b>
+      <input type="text" name="frm_Feed1_DE" size="4" value="" class="input-box" onChange="CalcRation()"></b></font></td>
+      <td width="7%" align="right"><font face="Arial"><b>
+      <input type="text" name="frm_Feed1_CP" size="4" value="" class="input-box" onChange="CalcRation()"></b></font></td>
+      <td width="7%" align="right"><font face="Arial"><b>
+      <input type="text" name="frm_Feed1_Lys" size="4" value="" class="input-box" onChange="CalcRation()"></b></font></td>
+      <td width="7%" align="right"><font face="Arial"><b>
+      <input type="text" name="frm_Feed1_Ca" size="4" value="" class="input-box" onChange="CalcRation()"></b></font></td>
+      <td width="7%" align="right"><font face="Arial"><b>
+      <input type="text" name="frm_Feed1_P" size="4" value="" class="input-box" onChange="CalcRation()"></b></font></td>
+      <td width="7%" align="right"><font face="Arial"><b>
+      <input type="text" name="frm_Feed1_Na" size="4" value="" class="input-box" onChange="CalcRation()"></b></font></td>
+      <td width="7%" align="right"><font face="Arial"><b>
+      <input type="text" name="frm_Feed1_Cl" size="4" value="" class="input-box" onChange="CalcRation()"></b></font></td>
+      <td width="7%" align="right"><font face="Arial"><b>
+      <input type="text" name="frm_Feed1_K" size="4" value="" class="input-box" onChange="CalcRation()"></b></font></td>
+    </tr>
+    <tr>
+      <td width="30%" align="left">
+      <input type="text" name="frm_Feed2_Name" size="20" value="" class="input-box" >&nbsp;&nbsp;<input type="button" value="NEW" name="FeedNew_2" onclick="importFeed(2)" class="input-box"></td>
+      <td width="7%" align="right"><font face="Arial"><b>
+      <input type="text" name="frm_Feed2_Amt" size="4" value="" class="input-box"  onChange="CalcRation()"></b></font></td>
+      <td width="7%" align="right"><font face="Arial"><b>
+      <input type="text" name="frm_Feed2_DM" size="4" value="" class="input-box" onChange="CalcRation()"></b></font></td>
+      <td width="7%" align="right"><font face="Arial"><b>
+      <input type="text" name="frm_Feed2_DE" size="4" value="" class="input-box" onChange="CalcRation()"></b></font></td>
+      <td width="7%" align="right"><font face="Arial"><b>
+      <input type="text" name="frm_Feed2_CP" size="4" value="" class="input-box" onChange="CalcRation()"></b></font></td>
+      <td width="7%" align="right"><font face="Arial"><b>
+      <input type="text" name="frm_Feed2_Lys" size="4" value="" class="input-box" onChange="CalcRation()"></b></font></td>
+      <td width="7%" align="right"><font face="Arial"><b>
+      <input type="text" name="frm_Feed2_Ca" size="4" value="" class="input-box" onChange="CalcRation()"></b></font></td>
+      <td width="7%" align="right"><font face="Arial"><b>
+      <input type="text" name="frm_Feed2_P" size="4" value="" class="input-box" onChange="CalcRation()"></b></font></td>
+      <td width="7%" align="right"><font face="Arial"><b>
+      <input type="text" name="frm_Feed2_Na" size="4" value="" class="input-box" onChange="CalcRation()"></b></font></td>
+      <td width="7%" align="right"><font face="Arial"><b>
+      <input type="text" name="frm_Feed2_Cl" size="4" value="" class="input-box" onChange="CalcRation()"></b></font></td>
+      <td width="7%" align="right"><font face="Arial"><b>
+      <input type="text" name="frm_Feed2_K" size="4" value="" class="input-box" onChange="CalcRation()"></b></font></td>
+    </tr>
+    <tr>
+      <td width="30%" align="left">
+      <input type="text" name="frm_Feed3_Name" size="20" value="" class="input-box" onChange="CalcRation()">&nbsp;&nbsp;<input type="button" value="NEW" name="FeedNew_3" onclick="importFeed(3)" class="input-box"></td>
+      <td width="7%" align="right"><font face="Arial"><b>
+      <input type="text" name="frm_Feed3_Amt" size="4" value="" class="input-box"  onChange="CalcRation()"></b></font></td>
+      <td width="7%" align="right"><font face="Arial"><b>
+      <input type="text" name="frm_Feed3_DM" size="4" value="" class="input-box" onChange="CalcRation()"></b></font></td>
+      <td width="7%" align="right"><font face="Arial"><b>
+      <input type="text" name="frm_Feed3_DE" size="4" value="" class="input-box" onChange="CalcRation()"></b></font></td>
+      <td width="7%" align="right"><font face="Arial"><b>
+      <input type="text" name="frm_Feed3_CP" size="4" value="" class="input-box" onChange="CalcRation()"></b></font></td>
+      <td width="7%" align="right"><font face="Arial"><b>
+      <input type="text" name="frm_Feed3_Lys" size="4" value="" class="input-box" onChange="CalcRation()"></b></font></td>
+      <td width="7%" align="right"><font face="Arial"><b>
+      <input type="text" name="frm_Feed3_Ca" size="4" value="" class="input-box" onChange="CalcRation()"></b></font></td>
+      <td width="7%" align="right"><font face="Arial"><b>
+      <input type="text" name="frm_Feed3_P" size="4" value="" class="input-box" onChange="CalcRation()"></b></font></td>
+      <td width="7%" align="right"><font face="Arial"><b>
+      <input type="text" name="frm_Feed3_Na" size="4" value="" class="input-box" onChange="CalcRation()"></b></font></td>
+      <td width="7%" align="right"><font face="Arial"><b>
+      <input type="text" name="frm_Feed3_Cl" size="4" value="" class="input-box" onChange="CalcRation()"></b></font></td>
+      <td width="7%" align="right"><font face="Arial"><b>
+      <input type="text" name="frm_Feed3_K" size="4" value="" class="input-box" onChange="CalcRation()"></b></font></td>
+    </tr>
+    <tr>
+      <td width="30%" align="left">
+      <input type="text" name="frm_Feed4_Name" size="20" value="" class="input-box" >&nbsp;&nbsp;<input type="button" value="NEW" name="FeedNew_4" onclick="importFeed(4)" class="input-box"></td>
+      <td width="7%" align="right"><font face="Arial"><b>
+      <input type="text" name="frm_Feed4_Amt" size="4" value="" class="input-box"  onChange="CalcRation()"></b></font></td>
+      <td width="7%" align="right"><font face="Arial"><b>
+      <input type="text" name="frm_Feed4_DM" size="4" value="" class="input-box" onChange="CalcRation()"></b></font></td>
+      <td width="7%" align="right"><font face="Arial"><b>
+      <input type="text" name="frm_Feed4_DE" size="4" value="" class="input-box" onChange="CalcRation()"></b></font></td>
+      <td width="7%" align="right"><font face="Arial"><b>
+      <input type="text" name="frm_Feed4_CP" size="4" value="" class="input-box" onChange="CalcRation()"></b></font></td>
+      <td width="7%" align="right"><font face="Arial"><b>
+      <input type="text" name="frm_Feed4_Lys" size="4" value="" class="input-box" onChange="CalcRation()"></b></font></td>
+      <td width="7%" align="right"><font face="Arial"><b>
+      <input type="text" name="frm_Feed4_Ca" size="4" value="" class="input-box" onChange="CalcRation()"></b></font></td>
+      <td width="7%" align="right"><font face="Arial"><b>
+      <input type="text" name="frm_Feed4_P" size="4" value="" class="input-box" onChange="CalcRation()"></b></font></td>
+      <td width="7%" align="right"><font face="Arial"><b>
+      <input type="text" name="frm_Feed4_Na" size="4" value="" class="input-box" onChange="CalcRation()"></b></font></td>
+      <td width="7%" align="right"><font face="Arial"><b>
+      <input type="text" name="frm_Feed4_Cl" size="4" value="" class="input-box" onChange="CalcRation()"></b></font></td>
+      <td width="7%" align="right"><font face="Arial"><b>
+      <input type="text" name="frm_Feed4_K" size="4" value="" class="input-box" onChange="CalcRation()"></b></font></td>
+    </tr>
+    <tr>
+      <td width="30%" align="left">
+      <input type="text" name="frm_Feed5_Name" size="20" value="" class="input-box" >&nbsp;&nbsp;<input type="button" value="NEW" name="FeedNew_5" onclick="importFeed(5)" class="input-box"></td>
+      <td width="7%" align="right"><font face="Arial"><b>
+      <input type="text" name="frm_Feed5_Amt" size="4" value="" class="input-box"  onChange="CalcRation()"></b></font></td>
+      <td width="7%" align="right"><font face="Arial"><b>
+      <input type="text" name="frm_Feed5_DM" size="4" value="" class="input-box" onChange="CalcRation()"></b></font></td>
+      <td width="7%" align="right"><font face="Arial"><b>
+      <input type="text" name="frm_Feed5_DE" size="4" value="" class="input-box" onChange="CalcRation()"></b></font></td>
+      <td width="7%" align="right"><font face="Arial"><b>
+      <input type="text" name="frm_Feed5_CP" size="4" value="" class="input-box" onChange="CalcRation()"></b></font></td>
+      <td width="7%" align="right"><font face="Arial"><b>
+      <input type="text" name="frm_Feed5_Lys" size="4" value="" class="input-box" onChange="CalcRation()"></b></font></td>
+      <td width="7%" align="right"><font face="Arial"><b>
+      <input type="text" name="frm_Feed5_Ca" size="4" value="" class="input-box" onChange="CalcRation()"></b></font></td>
+      <td width="7%" align="right"><font face="Arial"><b>
+      <input type="text" name="frm_Feed5_P" size="4" value="" class="input-box" onChange="CalcRation()"></b></font></td>
+      <td width="7%" align="right"><font face="Arial"><b>
+      <input type="text" name="frm_Feed5_Na" size="4" value="" class="input-box" onChange="CalcRation()"></b></font></td>
+      <td width="7%" align="right"><font face="Arial"><b>
+      <input type="text" name="frm_Feed5_Cl" size="4" value="" class="input-box" onChange="CalcRation()"></b></font></td>
+      <td width="7%" align="right"><font face="Arial"><b>
+      <input type="text" name="frm_Feed5_K" size="4" value="" class="input-box" onChange="CalcRation()"></b></font></td>
+    </tr>
+    <tr>
+      <td width="30%" align="left">
+      <input type="text" name="frm_Feed6_Name" size="20" value="" class="input-box" >&nbsp;&nbsp;<input type="button" value="NEW" name="FeedNew_6" onclick="importFeed(6)" class="input-box"></td>
+      <td width="7%" align="right"><font face="Arial"><b>
+      <input type="text" name="frm_Feed6_Amt" size="4" value="" class="input-box"  onChange="CalcRation()"></b></font></td>
+      <td width="7%" align="right"><font face="Arial"><b>
+      <input type="text" name="frm_Feed6_DM" size="4" value="" class="input-box" onChange="CalcRation()"></b></font></td>
+      <td width="7%" align="right"><font face="Arial"><b>
+      <input type="text" name="frm_Feed6_DE" size="4" value="" class="input-box" onChange="CalcRation()"></b></font></td>
+      <td width="7%" align="right"><font face="Arial"><b>
+      <input type="text" name="frm_Feed6_CP" size="4" value="" class="input-box" onChange="CalcRation()"></b></font></td>
+      <td width="7%" align="right"><font face="Arial"><b>
+      <input type="text" name="frm_Feed6_Lys" size="4" value="" class="input-box" onChange="CalcRation()"></b></font></td>
+      <td width="7%" align="right"><font face="Arial"><b>
+      <input type="text" name="frm_Feed6_Ca" size="4" value="" class="input-box" onChange="CalcRation()"></b></font></td>
+      <td width="7%" align="right"><font face="Arial"><b>
+      <input type="text" name="frm_Feed6_P" size="4" value="" class="input-box" onChange="CalcRation()"></b></font></td>
+      <td width="7%" align="right"><font face="Arial"><b>
+      <input type="text" name="frm_Feed6_Na" size="4" value="" class="input-box" onChange="CalcRation()"></b></font></td>
+      <td width="7%" align="right"><font face="Arial"><b>
+      <input type="text" name="frm_Feed6_Cl" size="4" value="" class="input-box" onChange="CalcRation()"></b></font></td>
+      <td width="7%" align="right"><font face="Arial"><b>
+      <input type="text" name="frm_Feed6_K" size="4" value="" class="input-box" onChange="CalcRation()"></b></font></td>
+    </tr>
+    <tr>
+      <td width="30%" align="left">
+      <input type="text" name="frm_Feed7_Name" size="20" value="" class="input-box" >&nbsp;&nbsp;<input type="button" value="NEW" name="FeedNew_7" onclick="importFeed(7)" class="input-box"></td>
+      <td width="7%" align="right"><font face="Arial"><b>
+      <input type="text" name="frm_Feed7_Amt" size="4" value="" class="input-box"  onChange="CalcRation()"></b></font></td>
+      <td width="7%" align="right"><font face="Arial"><b>
+      <input type="text" name="frm_Feed7_DM" size="4" value="" class="input-box" onChange="CalcRation()"></b></font></td>
+      <td width="7%" align="right"><font face="Arial"><b>
+      <input type="text" name="frm_Feed7_DE" size="4" value="" class="input-box" onChange="CalcRation()"></b></font></td>
+      <td width="7%" align="right"><font face="Arial"><b>
+      <input type="text" name="frm_Feed7_CP" size="4" value="" class="input-box" onChange="CalcRation()"></b></font></td>
+      <td width="7%" align="right"><font face="Arial"><b>
+      <input type="text" name="frm_Feed7_Lys" size="4" value="" class="input-box" onChange="CalcRation()"></b></font></td>
+      <td width="7%" align="right"><font face="Arial"><b>
+      <input type="text" name="frm_Feed7_Ca" size="4" value="" class="input-box" onChange="CalcRation()"></b></font></td>
+      <td width="7%" align="right"><font face="Arial"><b>
+      <input type="text" name="frm_Feed7_P" size="4" value="" class="input-box" onChange="CalcRation()"></b></font></td>
+      <td width="7%" align="right"><font face="Arial"><b>
+      <input type="text" name="frm_Feed7_Na" size="4" value="" class="input-box" onChange="CalcRation()"></b></font></td>
+      <td width="7%" align="right"><font face="Arial"><b>
+      <input type="text" name="frm_Feed7_Cl" size="4" value="" class="input-box" onChange="CalcRation()"></b></font></td>
+      <td width="7%" align="right"><font face="Arial"><b>
+      <input type="text" name="frm_Feed7_K" size="4" value="" class="input-box" onChange="CalcRation()"></b></font></td>
+
+    </tr>
+</table>
+</div>
+
+
+
+<div align="center" ID="FeedPick"  class="maincontent" style="visibility: hidden">
+<b><br>
+Feed Picker </b>
+<BR>
+<BR>
+Select Feed Type:&nbsp; <br><br><b><font face="Arial" size="1"> 
+<select size="1" name="frm_FeedType" onChange="switchList()">
+        <option selected value="1">Forages</option>
+        <option value="2">Concentrates</option>
+        <option value="3">High Fat Feeds</option>
+        <option value="4">Minerals/Vitamins</option>
+        </select><br>
+&nbsp;</font></b> 
+<select size="8" name="frm_FeedList">
+<option value="-1">Dummy</option>
+</select>
+<br>
+<p><input type="button" value="Select" name="Feed_Sel" onclick="returnFeed()" class="input-box"></p>
+<p>
+</p>
+<BR>
+</div>
+
+
+<!-- Eliminados estos contenidos por ser irrelevantes-->
+<div align="center" ID="ProgramOps"  class="maincontent" style="visibility: hidden">
+</div>
+<div align="center" ID="LegalStuff"  class="maincontent" style="visibility: hidden; ">
+</div>
+
+
+
+<div align="center" ID="MinVit"  class="maincontent" style="visibility: hidden">
+<b><font size="1"><br>
+Daily
+Requirements for Other Nutrients<br>
+<br>
+</font></b><BR>
+
+<table border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse"  width="50%" id="AutoNumber15">
+  <tr>
+    <td width="50%" align="left">Magnesium (Mg)</td>
+    <td width="50%" align="left"> <font face="Arial"><b>
+      <input type="text" name="frm_Feed_ReqMg" size="4" value="" class="calc-box" > 
+g</b></font></td>
+  </tr>
+  <tr>
+    <td width="50%" align="left">Sulfur (S)</td>
+    <td width="50%" align="left"> <font face="Arial"><b>
+      <input type="text" name="frm_Feed_ReqS" size="4" value="" class="calc-box" > 
+g </b></font>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" align="left">Cobalt (Co)</td>
+    <td width="50%" align="left"> <font face="Arial"><b>
+      <input type="text" name="frm_Feed_ReqCo" size="4" value="" class="calc-box" > 
+mg </b></font>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" align="left">Copper (Cu)</td>
+    <td width="50%" align="left"> <font face="Arial"><b>
+      <input type="text" name="frm_Feed_ReqCu" size="4" value="" class="calc-box" > 
+mg </b></font>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" align="left">Iodine (I)</td>
+    <td width="50%" align="left"> <font face="Arial"><b>
+      <input type="text" name="frm_Feed_ReqI" size="4" value="" class="calc-box" > 
+mg </b></font>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" align="left">Iron (Fe)</td>
+    <td width="50%" align="left"> <font face="Arial"><b>
+      <input type="text" name="frm_Feed_ReqFe" size="4" value="" class="calc-box" > 
+mg </b></font>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" align="left">Manganese (Mn)</td>
+    <td width="50%" align="left"> <font face="Arial"><b>
+      <input type="text" name="frm_Feed_ReqMn" size="4" value="" class="calc-box" > 
+mg </b></font>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" align="left">Zinc (Zn)</td>
+    <td width="50%" align="left"> <font face="Arial"><b>
+      <input type="text" name="frm_Feed_ReqZn" size="4" value="" class="calc-box" > 
+mg </b></font>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" align="left">Selenium (Se)</td>
+    <td width="50%" align="left"> <font face="Arial"><b>
+      <input type="text" name="frm_Feed_ReqSe" size="4" value="" class="calc-box" > 
+mg
+</b></font>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" align="left">Vitamin A</td>
+    <td width="50%" align="left"> <font face="Arial"><b>
+      <input type="text" name="frm_Feed_ReqVitA" size="4" value="" class="calc-box" > 
+IU</b></font></td>
+  </tr>
+  <tr>
+    <td width="50%" align="left">Vitamin D</td>
+    <td width="50%" align="left"> <font face="Arial"><b>
+      <input type="text" name="frm_Feed_ReqVitD" size="4" value="" class="calc-box" > 
+IU </b></font>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" align="left">Vitamin E</td>
+    <td width="50%" align="left"> <font face="Arial"><b>
+      <input type="text" name="frm_Feed_ReqVitE" size="4" value="" class="calc-box" > 
+IU</b></font></td>
+  </tr>
+  <tr>
+    <td width="50%" align="left">Thiamin</td>
+    <td width="50%" align="left"> <font face="Arial"><b>
+      <input type="text" name="frm_Feed_ReqThi" size="4" value="" class="calc-box" > 
+mg </b></font>
+    </td>
+  </tr>
+  <tr>
+    <td width="50%" align="left">Riboflavin</td>
+    <td width="50%" align="left"> <font face="Arial"><b>
+      <input type="text" name="frm_Feed_ReqRibo" size="4" value="" class="calc-box" > 
+mg</b></font></td>
+  </tr>
+</table>
+
+<p> <font face="Arial"><b>
+<br>
+&nbsp;</b></font><br>
+<font face="Arial"><b>
+      &nbsp;</b></font></div>
+
+
+
+<div align="center" ID="TitlePage"  class="maincontent" >
+<p></p>
+<p><font face="Arial"><b>
+&nbsp;</b></font><table border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse; background-color: #ffffff;"  width="95%" id="AutoNumber12">
+  <tr>
+    <td width="45%">
+        <img src="img/cntq.jpg" width="300" height="300">
+   
+    </td>
+    <td width="55%">
+      <h2>Información relevante que se desee poner en esta vista inicial.</h2>
+  </td>
+  </tr>
+</table>
+</div>
+
+
+<div align="center" ID="ConvMetric"  class="maincontent" >
+
+</div>
+</div>
+<br>
+    <p>&nbsp;</td>
+    </tr>
+  </table>
+  </center>
+<br>
+  <center>
+  <table border="1" cellpadding="0" cellspacing="0" width="650" id="Dummy">
+    <tr>
+      <td>
+<div align="center">
+  <center>
+<table border="1" cellpadding="0" cellspacing="0" style="border-collapse: collapse"  width="100%" id="AutoNumber7">
+    <tr>
+      <td width="30%" align="center" bgcolor="#C0C0C0">&nbsp;</td>
+      <td width="7%" align="center" bgcolor="#C0C0C0"><b>
+      <font face="Arial">Amt</font></b></td>
+      <td width="7%" align="center" bgcolor="#C0C0C0"><b>
+      <font face="Arial">DE</font></b></td>
+      <td width="7%" align="center" bgcolor="#C0C0C0"><b>
+      <font face="Arial">CP</font></b></td>
+      <td width="7%" align="center" bgcolor="#C0C0C0"><b>
+      <font face="Arial">Lys</font></b></td>
+      <td width="7%" align="center" bgcolor="#C0C0C0"><b>
+      <font face="Arial">Ca</font></b></td>
+      <td width="7%" align="center" bgcolor="#C0C0C0"><b>
+      <font face="Arial">P </font></b></td>
+      <td width="7%" align="center" bgcolor="#C0C0C0"><b><font face="Arial">Na</font></b></td>
+      <td width="7%" align="center" bgcolor="#C0C0C0"><b><font face="Arial">Cl</font></b></td>
+      <td width="7%" align="center" bgcolor="#C0C0C0"><b>
+      <font face="Arial">K</font></b></td>
+    </tr>
+    <tr>
+      <td width="30%" align="center" bgcolor="#C0C0C0">&nbsp;</td>
+      <td width="7%" align="center" bgcolor="#C0C0C0"><b>
+      <font face="Arial">kg</font></b></td>
+      <td width="7%" align="center" bgcolor="#C0C0C0"><b>
+      <font face="Arial">Mcal</font></b></td>
+      <td width="7%" align="center" bgcolor="#C0C0C0"><b>
+      <font face="Arial">g</font></b></td>
+      <td width="7%" align="center" bgcolor="#C0C0C0"><b>
+      <font face="Arial">g</font></b></td>
+      <td width="7%" align="center" bgcolor="#C0C0C0"><b>
+      <font face="Arial">g</font></b></td>
+      <td width="7%" align="center" bgcolor="#C0C0C0"><b>
+      <font face="Arial">g</font></b></td>
+      <td width="7%" align="center" bgcolor="#C0C0C0"><b>
+      <font face="Arial">g</font></b></td>
+      <td width="7%" align="center" bgcolor="#C0C0C0"><b>
+      <font face="Arial">g</font></b></td>
+      <td width="7%" align="center" bgcolor="#C0C0C0"><b>
+      <font face="Arial">g</font></b></td>
+    </tr>
+    <tr>
+      <td width="30%" align="left" ><b><font face="Arial" size="1">&nbsp;&nbsp;</font><a href="#" onClick="menu('AnimalSpec'); return false">Requerimientos del Animal</a></b></td>
+      <td width="7%" align="right">&nbsp;</td>
+      <td width="7%" align="right"><font face="Arial"><b>
+      <input type="text" name="frm_Feed_ReqDE" size="4" value="" class="calc-box" ></b></font></td>
+      <td width="7%" align="right"><font face="Arial"><b>
+      <input type="text" name="frm_Feed_ReqCP" size="4" value="" class="calc-box" ></b></font></td>
+      <td width="7%" align="right"><font face="Arial"><b>
+      <input type="text" name="frm_Feed_ReqLys" size="4" value="" class="calc-box" ></b></font></td>
+      <td width="6%" align="right"><font face="Arial"><b>
+      <input type="text" name="frm_Feed_ReqCa" size="4" value="" class="calc-box" ></b></font></td>
+      <td width="7%" align="right"><font face="Arial"><b>
+      <input type="text" name="frm_Feed_ReqP" size="4" value="" class="calc-box" ></b></font></td>
+      <td width="7%" align="right"> <font face="Arial"><b>
+      <input type="text" name="frm_Feed_ReqNa" size="4" value="" class="calc-box" ></b></font></td>
+      <td width="7%" align="right"> <font face="Arial"><b>
+      <input type="text" name="frm_Feed_ReqCl" size="4" value="" class="calc-box" ></b></font></td>
+      <td width="7%" align="right"><font face="Arial"><b>
+      <input type="text" name="frm_Feed_ReqK" size="4" value="" class="calc-box" ></b></font></td>
+    </tr>
+	<tr>
+      <td width="30%" align="left"><font size="1" face="Arial">&nbsp;&nbsp;</font><b><a href="#" onClick="menu('DietSpec'); return false">Suplemento Dietético</a></b></td>
+      <td width="7%" align="right"><font face="Arial"><b>
+      <input type="text" name="frm_Feed_TotDM" size="4" value="" class="calc-box" ></b></font></td>
+      <td width="7%" align="right"><font face="Arial"><b>
+      <input type="text" name="frm_Feed_TotDE" size="4" value="" class="calc-box" ></b></font></td>
+      <td width="7%" align="right"><font face="Arial"><b>
+      <input type="text" name="frm_Feed_TotCP" size="4" value="" class="calc-box" ></b></font></td>
+      <td width="7%" align="right"><font face="Arial"><b>
+      <input type="text" name="frm_Feed_TotLys" size="4" value="" class="calc-box" ></b></font></td>
+      <td width="6%" align="right"><font face="Arial"><b>
+      <input type="text" name="frm_Feed_TotCa" size="4" value="" class="calc-box" ></b></font></td>
+      <td width="7%" align="right"><font face="Arial"><b>
+      <input type="text" name="frm_Feed_TotP" size="4" value="" class="calc-box" ></b></font></td>
+      <td width="7%" align="right"><font face="Arial"><b>
+      <input type="text" name="frm_Feed_TotNa" size="4" value="" class="calc-box" ></b></font></td>
+      <td width="7%" align="right"><font face="Arial"><b>
+      <input type="text" name="frm_Feed_TotCl" size="4" value="" class="calc-box" ></b></font></td>
+      <td width="7%" align="right"><font face="Arial"><b>
+      <input type="text" name="frm_Feed_TotK" size="4" value="" class="calc-box" ></b></font></td>
+    </tr>
+    <tr>
+      <td width="30%" align="left"><b><font face="Arial" size="1">&nbsp;&nbsp;</font><font face="Arial" size="2">Balance</font></b></td>
+      <td width="7%" align="right"><font face="Arial"><b>
+      <input type="text" name="frm_Feed_DiffDM" size="4" value="" class="calc-box" ></b></font></td>
+      <td width="7%" align="right"><font face="Arial"><b>
+      <input type="text" name="frm_Feed_DiffDE" size="4" value="" class="calc-box" ></b></font></td>
+      <td width="7%" align="right"><font face="Arial"><b>
+      <input type="text" name="frm_Feed_DiffCP" size="4" value="" class="calc-box" ></b></font></td>
+      <td width="7%" align="right"><font face="Arial"><b>
+      <input type="text" name="frm_Feed_DiffLys" size="4" value="" class="calc-box" ></b></font></td>
+      <td width="6%" align="right"><font face="Arial"><b>
+      <input type="text" name="frm_Feed_DiffCa" size="4" value="" class="calc-box" ></b></font></td>
+      <td width="7%" align="right"><font face="Arial"><b>
+      <input type="text" name="frm_Feed_DiffP" size="4" value="" class="calc-box" ></b></font></td>
+      <td width="7%" align="right"><font face="Arial"><b>
+      <input type="text" name="frm_Feed_DiffNa" size="4" value="" class="calc-box" ></b></font></td>
+      <td width="7%" align="right"><font face="Arial"><b>
+      <input type="text" name="frm_Feed_DiffCl" size="4" value="" class="calc-box" ></b></font></td>
+      <td width="7%" align="right"><font face="Arial"><b>
+      <input type="text" name="frm_Feed_DiffK" size="4" value="" class="calc-box" ></b></font></td>
+    </tr>
+    <tr>
+      <td width="30%" align="left" bgcolor="#FFFFCC">
+      <b>&nbsp;&nbsp;Densities (per kg DM)<br>
+      (</b><font face="Arial"><b><input type="text" name="frm_Feed_ReqDM" size="4" value="" class="calc-box" >&nbsp; kg 
+      intake)  </b></font></td>
+      <td width="7%" align="right" bgcolor="#FFFFCC">&nbsp;</td>
+      <td width="7%" align="right" bgcolor="#FFFFCC">
+      <input type="text" name="frm_Feed_DenDE" size="4" value="" class="calc-box" ></td>
+      <td width="7%" align="right" bgcolor="#FFFFCC">
+      <input type="text" name="frm_Feed_DenCP" size="4" value="" class="calc-box" ></td>
+      <td width="7%" align="right" bgcolor="#FFFFCC">
+      <input type="text" name="frm_Feed_DenLys" size="4" value="" class="calc-box" ></td>
+      <td width="6%" align="right" bgcolor="#FFFFCC">
+      <input type="text" name="frm_Feed_DenCa" size="4" value="" class="calc-box" ></td>
+      <td width="7%" align="right" bgcolor="#FFFFCC">
+      <input type="text" name="frm_Feed_DenP" size="4" value="" class="calc-box" ></td>
+      <td width="7%" align="right" bgcolor="#FFFFCC">
+      <input type="text" name="frm_Feed_DenNa" size="4" value="" class="calc-box" ></td>
+      <td width="7%" align="right" bgcolor="#FFFFCC">
+      <input type="text" name="frm_Feed_DenCl" size="4" value="" class="calc-box" ></td>
+      <td width="7%" align="right" bgcolor="#FFFFCC">
+      <input type="text" name="frm_Feed_DenK" size="4" value="" class="calc-box" ></td>
+    </tr>
+</table>
+</center>
+</div>
+
+</td>
+    </tr>
+  </table>
+  </center>
+<br>
+</form>    
+  </div>
+
+<SCRIPT LANGUAGE="JavaScript" TYPE="text/javascript">
+<!-- 
+
+function doHourglass()
+{
+  document.body.style.cursor = 'wait';
+}
+
+function editFeed(x){
+	var scn;
+	var testval;
+	var div;
+			
+	(x) ? scn = x : scn = 0;
+	
+
+	testval = "FD,0.00,FEEDNAME,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00"
+
+	Ration[x].fromString(testval);
+	
+	initFeedTable();
+
+	div1=document.getElementById("FeedPick");
+	eval("div1.style.visibility='visible'");
+
+	
+}
+
+function importFeed(x){
+		cmenu();
+		
+		var div1;
+		div1=document.getElementById("FeedPick");
+		eval("div1.style.visibility='visible'");
+		
+		FeedEditNum=x;
+
+		switchList();
+
+}
+
+
+function switchList(){
+
+	var db;
+	
+	document.theform.frm_FeedList.options.length = 0;
+
+	tmp1 = document.theform.frm_FeedType.options[document.theform.frm_FeedType.selectedIndex].value;
+
+	switch (tmp1)
+	{
+	case '1':
+//			db = FL_ForageName;
+			db = FL_Forage;
+			break;
+	case '2': 					
+//			db = FL_ConcName;
+			db = FL_Conc;
+			break;
+	case '3':
+//			db = FL_hiFatName;
+			db = FL_hiFat;
+			break;
+	case '4':
+//			db = FL_MinVitName;
+			db = FL_MinVit;
+			break;
+	}
+
+	for(var i =0;i<db.length;i++) {
+//		document.theform.frm_FeedList.options[i] = new Option(db[i],i);
+		document.theform.frm_FeedList.options[i] = new Option(GetFeedname(db[i]),i);
+	}
+
+}
+
+
+function returnFeed(){
+
+	tmp1 = document.theform.frm_FeedType.options[document.theform.frm_FeedType.selectedIndex].value;
+
+	testval = "FD,0.00,Barley Grain - rolled,91.00,3.67,12.40,0.45,0.06,0.39,0.14,0.56,0.00"
+
+	switch (tmp1)
+	{
+	case '1':
+			tmp2 = document.theform.frm_FeedList.options[document.theform.frm_FeedList.selectedIndex].value;
+	
+			testval = FL_Forage[tmp2];
+			Ration[FeedEditNum].fromString(testval);
+	
+
+			initFeedTable();
+
+		break;
+	
+	case '2': 					
+			tmp2 = document.theform.frm_FeedList.options[document.theform.frm_FeedList.selectedIndex].value;
+	
+			testval = FL_Conc[tmp2];
+			Ration[FeedEditNum].fromString(testval);
+	
+	
+			initFeedTable();
+		break;
+		
+	case '3': 					
+			tmp2 = document.theform.frm_FeedList.options[document.theform.frm_FeedList.selectedIndex].value;
+	
+			testval = FL_hiFat[tmp2];
+			Ration[FeedEditNum].fromString(testval);
+	
+	
+			initFeedTable();
+		break;
+		
+	case '4': 					
+			tmp2 = document.theform.frm_FeedList.options[document.theform.frm_FeedList.selectedIndex].value;
+		
+			testval = FL_MinVit[tmp2];
+			Ration[FeedEditNum].fromString(testval);
+	
+	
+			initFeedTable();
+		break;
+
+	default:
+		alert('undef');
+	}
+
+	menu('DietSpec');
+
+}
+
+function testAlert(x){
+	alert(x);
+}
+
+function setRation() {
+
+	Ration[0].FeedAmt = 0.0;
+	Ration[0].FeedName = "Orchardgrass";
+	Ration[0].FeedDM = 89.1;
+	Ration[0].FeedDE = 2.17;
+	Ration[0].FeedCP = 12.8;
+	Ration[0].FeedLys = 0.25;   // Arbitrary number - not from table
+	Ration[0].FeedCa = 0.38;
+	Ration[0].FeedP = 0.25;		// Arbitrary number - not from table
+	Ration[0].FeedMg = 0.14;
+	Ration[0].FeedK = 1.10;
+	Ration[0].FeedVitA = 8000;		// Arbitrary number - not from table
+	Ration[0].FeedNa = 0.02;
+	Ration[0].FeedCl = 0.66;		// Arbitrary number - not from table
+
+	Ration[1].FeedAmt = 0.0;
+	Ration[1].FeedName = "Orchardgrass";
+	Ration[1].FeedDM = 89.1;
+	Ration[1].FeedDE = 2.17;
+	Ration[1].FeedCP = 12.8;
+	Ration[1].FeedLys = 0.25;   // Arbitrary number - not from table
+	Ration[1].FeedCa = 0.38;
+	Ration[1].FeedP = 0.25;		// Arbitrary number - not from table
+	Ration[1].FeedMg = 0.14;
+	Ration[1].FeedK = 1.10;
+	Ration[1].FeedVitA = 8000;		// Arbitrary number - not from table
+	Ration[1].FeedNa = 0.02;
+	Ration[1].FeedCl = 0.66;		// Arbitrary number - not from table
+
+	Ration[2].FeedAmt = 0.0;
+	Ration[2].FeedName = "Alfalfa Hay";
+	Ration[2].FeedDM = 90.9;
+	Ration[2].FeedDE = 2.17;
+	Ration[2].FeedCP = 17.0;
+	Ration[2].FeedLys = 0.87;
+	Ration[2].FeedCa = 1.19;
+	Ration[2].FeedP = 0.24;
+	Ration[2].FeedMg = 0.27;
+	Ration[2].FeedK = 2,46;
+	Ration[2].FeedVitA = 26000;	
+	Ration[2].FeedNa = 0.10;
+	Ration[2].FeedCl = 0.65;		// Arbitrary number - not from table
+
+	Ration[3].FeedAmt = 0.0;
+	Ration[3].FeedName = "Feed3";
+	Ration[3].FeedDM = 89.1;
+	Ration[3].FeedDE = 2.17;
+	Ration[3].FeedCP = 12.8;
+	Ration[3].FeedLys = 0.25;   // Arbitrary number - not from table
+	Ration[3].FeedCa = 0.38;
+	Ration[3].FeedP = 0.25;		// Arbitrary number - not from table
+	Ration[3].FeedMg = 0.14;
+	Ration[3].FeedK = 1.10;
+	Ration[3].FeedVitA = 8000;		// Arbitrary number - not from table
+	Ration[3].FeedNa = 0.02;
+	Ration[3].FeedCl = 0.66;		// Arbitrary number - not from table
+
+	Ration[4].FeedAmt = 0.0;
+	Ration[4].FeedName = "Feed4";
+	Ration[4].FeedDM = 89.1;
+	Ration[4].FeedDE = 2.17;
+	Ration[4].FeedCP = 12.8;
+	Ration[4].FeedLys = 0.25;   // Arbitrary number - not from table
+	Ration[4].FeedCa = 0.38;
+	Ration[4].FeedP = 0.25;		// Arbitrary number - not from table
+	Ration[4].FeedMg = 0.14;
+	Ration[4].FeedK = 1.10;
+	Ration[4].FeedVitA = 8000;		// Arbitrary number - not from table
+	Ration[4].FeedNa = 0.02;
+	Ration[4].FeedCl = 0.66;		// Arbitrary number - not from table
+
+	Ration[5].FeedAmt = 0.0;
+	Ration[5].FeedName = "Feed5";
+	Ration[5].FeedDM = 89.1;
+	Ration[5].FeedDE = 2.17;
+	Ration[5].FeedCP = 12.8;
+	Ration[5].FeedLys = 0.25;   // Arbitrary number - not from table
+	Ration[5].FeedCa = 0.38;
+	Ration[5].FeedP = 0.25;		// Arbitrary number - not from table
+	Ration[5].FeedMg = 0.14;
+	Ration[5].FeedK = 1.10;
+	Ration[5].FeedVitA = 8000;		// Arbitrary number - not from table
+	Ration[5].FeedNa = 0.02;
+	Ration[5].FeedCl = 0.66;		// Arbitrary number - not from table
+
+	Ration[6].FeedAmt = 0.0;
+	Ration[6].FeedName = "Feed6";
+	Ration[6].FeedDM = 89.1;
+	Ration[6].FeedDE = 2.17;
+	Ration[6].FeedCP = 12.8;
+	Ration[6].FeedLys = 0.25;   // Arbitrary number - not from table
+	Ration[6].FeedCa = 0.38;
+	Ration[6].FeedP = 0.25;		// Arbitrary number - not from table
+	Ration[6].FeedMg = 0.14;
+	Ration[6].FeedK = 1.10;
+	Ration[6].FeedVitA = 8000;		// Arbitrary number - not from table
+	Ration[6].FeedNa = 0.02;
+	Ration[6].FeedCl = 0.66;		// Arbitrary number - not from table
+
+	Ration[7].FeedAmt = 0.0;
+	Ration[7].FeedName = "Feed7";
+	Ration[7].FeedDM = 89.1;
+	Ration[7].FeedDE = 2.17;
+	Ration[7].FeedCP = 12.8;
+	Ration[7].FeedLys = 0.25;   // Arbitrary number - not from table
+	Ration[7].FeedCa = 0.38;
+	Ration[7].FeedP = 0.25;		// Arbitrary number - not from table
+	Ration[7].FeedMg = 0.14;
+	Ration[7].FeedK = 1.10;
+	Ration[7].FeedVitA = 8000;		// Arbitrary number - not from table
+	Ration[7].FeedNa = 0.02;
+	Ration[7].FeedCl = 0.66;		// Arbitrary number - not from table
+
+}
+
+/*
+   name - name of the cookie
+   value - value of the cookie
+   [expires] - expiration date of the cookie
+     (defaults to end of current session)
+   [path] - path for which the cookie is valid
+     (defaults to path of calling document)
+   [domain] - domain for which the cookie is valid
+     (defaults to domain of calling document)
+   [secure] - Boolean value indicating if the cookie transmission requires
+     a secure transmission
+   * an argument defaults when it is assigned null as a placeholder
+   * a null placeholder is not required for trailing omitted arguments
+*/
+
+function setCookie(name, value, expires, path, domain, secure) {
+  var curCookie = name + "=" + escape(value) +
+      ((expires) ? "; expires=" + expires.toGMTString() : "") +
+      ((path) ? "; path=" + path : "") +
+      ((domain) ? "; domain=" + domain : "") +
+      ((secure) ? "; secure" : "");
+  document.cookie = curCookie;
+}
+
+/*
+  name - name of the desired cookie
+  return string containing value of specified cookie or null
+  if cookie does not exist
+*/
+
+function getCookie(name) {
+  var dc = document.cookie;
+  var prefix = name + "=";
+  var begin = dc.indexOf("; " + prefix);
+  if (begin == -1) {
+    begin = dc.indexOf(prefix);
+    if (begin != 0) return null;
+  } else
+    begin += 2;
+  var end = document.cookie.indexOf(";", begin);
+  if (end == -1)
+    end = dc.length;
+  return unescape(dc.substring(begin + prefix.length, end));
+}
+
+/*
+   name - name of the cookie
+   [path] - path of the cookie (must be same as path used to create cookie)
+   [domain] - domain of the cookie (must be same as domain used to
+     create cookie)
+   path and domain default if assigned null or omitted if no explicit
+     argument proceeds
+*/
+
+function deleteCookie(name, path, domain) {
+  if (getCookie(name)) {
+    document.cookie = name + "=" +
+    ((path) ? "; path=" + path : "") +
+    ((domain) ? "; domain=" + domain : "") +
+    "; expires=Thu, 01-Jan-70 00:00:01 GMT";
+  }
+}
+
+// date - any instance of the Date object
+// * hand all instances of the Date object to this function for "repairs"
+
+function fixDate(date) {
+  var base = new Date(0);
+  var skew = base.getTime();
+  if (skew > 0)
+    date.setTime(date.getTime() - skew);
+}
+
+function getRadioValue (radioButtonOrGroup) {
+  var buttonsLength = radioButtonOrGroup.length;
+  if (buttonsLength) { // group
+    for (var b = 0; b < buttonsLength; b++)
+      if (radioButtonOrGroup[b].checked)
+        return radioButtonOrGroup[b].value;
+  }
+  else if (radioButtonOrGroup.checked)
+    return radioButtonOrGroup.value;
+  return null;
+}
+
+function calcVals()
+{ 
+	//--- Initialize Output variables (-1.0 means not defined)
+	DM_req = 0;
+
+	DE_req = 0.0;
+	CP_req = 0.0;
+	LYS_req = 0.0;
+	Ca_req = 0.0;
+	P_req = 0.0;
+	Mg_req = 0.0;
+	K_req = 0.0;
+	Na_req = 0;
+	Cl_req = 0;
+	S_req = 0;
+	Co_req = 0;
+	Cu_req = 0;
+	I_req = 0;
+	Fe_req = 0;
+	Mn_req = 0;
+	Zn_req = 0;
+	Se_req = 0;
+	A_req = 0;
+	D_req = 0;
+	E_req = 0;
+	Thi_req = 0;
+	Ribo_req = 0;
+
+	VitA_req = 0.0;
+	SweatLoss = 0.0;
+	
+	//--- Pull Inputs from form
+
+	eval("document.theform.frm_MonthOfGest.style.visibility='hidden'");
+	eval("document.theform.frm_MonthOfLact.style.visibility='hidden'");
+	eval("document.theform.frm_WorkLoad.style.visibility='hidden'");
+	eval("document.theform.frm_Age2.style.visibility='hidden'");
+	eval("document.theform.frm_DailyGain.style.visibility='hidden'");
+	eval("document.theform.frm_txtDailyGain.style.visibility='hidden'");
+	eval("document.theform.frm_LevMaint.style.visibility='hidden'");
+	eval("document.theform.frm_TxtGrow.style.visibility='hidden'");
+	eval("document.theform.frm_TxtPreg.style.visibility='hidden'");
+	eval("document.theform.frm_TxtLact.style.visibility='hidden'");
+	eval("document.theform.frm_TxtWork.style.visibility='hidden'");
+	eval("document.theform.frm_TxtWork_grow.style.visibility='hidden'");
+	eval("document.theform.frm_WorkLoad_grow.style.visibility='hidden'");
+	eval("document.theform.frm_StallionType.style.visibility='hidden'");
+
+	IntakeLevel = document.theform.frm_IntakeLevel.value;
+	AnimalType = getRadioValue(document.theform.R1) 
+	MatureWeight = parseFloat(document.theform.frm_MatureWeight.value);
+	Age = document.theform.frm_Age2.value;
+	MaintLevel = document.theform.frm_LevMaint.options[document.theform.frm_LevMaint.selectedIndex].value;
+	StallionMaintLevel = document.theform.frm_StallionType.options[document.theform.frm_StallionType.selectedIndex].value;
+	WorkLoadGrow = document.theform.frm_WorkLoad_grow.options[document.theform.frm_WorkLoad_grow.selectedIndex].value;
+	MonthOfGest = document.theform.frm_MonthOfGest.options[document.theform.frm_MonthOfGest.selectedIndex].value;
+	MonthOfLact = document.theform.frm_MonthOfLact.options[document.theform.frm_MonthOfLact.selectedIndex].value;
+	WorkLoad = document.theform.frm_WorkLoad.options[document.theform.frm_WorkLoad.selectedIndex].value;
+
+	switch (AnimalType)
+	{
+	case "MAINTENANCE": 					
+	// Adult Horse at maintenance 
+		BodyWeight = MatureWeight;
+		DM_req = (IntakeLevel/100) * BodyWeight;
+		if (MaintLevel == 1) {					
+			// Minimum requirement
+			DE_req = 0.0303 * BodyWeight;		
+			CP_req = 1.08 * BodyWeight;
+		}
+		if (MaintLevel == 2) {					
+			// Average requirement
+			DE_req = 0.0333 * BodyWeight;		
+			CP_req = 1.26 * BodyWeight;			
+		}
+		if (MaintLevel == 3) {					
+			// Elevated requirement
+			DE_req = 0.0363 * BodyWeight;		
+			CP_req = 1.44 * BodyWeight;			
+		}
+		LYS_req = 0.043 * CP_req;
+		Ca_req = 0.04 * BodyWeight;
+		P_req = 0.028 * BodyWeight;
+		Mg_req = 0.015 * BodyWeight;
+		K_req = 0.05 * BodyWeight;
+		Na_req = 0.02 * BodyWeight;
+		Cl_req = 0.08 * BodyWeight;
+		S_req = 1.5 * DM_req;
+		Co_req =  0.05 * DM_req;
+		Cu_req = 0.2 * BodyWeight;
+		I_req = 0.35 * DM_req;
+		Fe_req = 40 * DM_req;
+		Mn_req = 40 * DM_req;
+		Zn_req = 40 * DM_req;
+		Se_req = 0.1 * DM_req;
+		VitA_req = 30 * BodyWeight;
+		VitD_req = 6.6 * BodyWeight;
+		VitE_req = 1.0 * BodyWeight;
+		Thi_req = 0.06 * BodyWeight;
+		Ribo_req = 0.04 * BodyWeight;
+	break;
+
+	case "EXERCISE":						
+		BodyWeight = MatureWeight;
+		DM_req = (IntakeLevel/100) * BodyWeight;
+		if (WorkLoad == 1) {			
+			// Light
+			SweatLoss = 0.0025 * BodyWeight;
+			DE_req = (0.0333 * BodyWeight )*1.2;		
+			CP_req = (1.26 * BodyWeight) + (0.089 * BodyWeight)+ (SweatLoss * 7.8 * 2.0 / 0.79);
+			Ca_req = (0.06 * BodyWeight);
+			P_req = (0.036 * BodyWeight);
+			Mg_req = (0.019 * BodyWeight);
+			VitE_req = 1.6 * BodyWeight;
+			Thi_req = 0.06 * BodyWeight;
+			Ribo_req = 0.04 * BodyWeight;
+		}
+		if (WorkLoad == 2) {				
+			// Moderate
+			SweatLoss = 0.005 * BodyWeight;
+			DE_req = (0.0333 * BodyWeight )*1.4;		
+			CP_req = (1.26 * BodyWeight) + (0.177 * BodyWeight) + (SweatLoss * 7.8 * 2.0 / 0.79);
+			Ca_req = (0.07 * BodyWeight);
+			P_req = (0.042 * BodyWeight);
+			Mg_req = (0.023 * BodyWeight);
+			VitE_req = 1.8 * BodyWeight;
+			Thi_req = 0.113 * BodyWeight;
+			Ribo_req = 0.045 * BodyWeight;
+		}
+		if (WorkLoad == 3) {				
+			// Heavy
+			SweatLoss = 0.01 * BodyWeight;		
+			DE_req = (0.0333 * BodyWeight ) * 1.6;	
+			CP_req = (1.26 * BodyWeight) + (0.266 * BodyWeight) + (SweatLoss * 7.8 * 2.0 / 0.79);
+			Ca_req = (0.08 * BodyWeight);
+			P_req = (0.058 * BodyWeight);
+			Mg_req = (0.03 * BodyWeight);
+			VitE_req = 2.0 * BodyWeight;
+			Thi_req = 0.125 * BodyWeight;
+			Ribo_req = 0.05 * BodyWeight;
+		}
+		if (WorkLoad == 4) {
+			// Very Heavy
+			SweatLoss = 0.02 * BodyWeight;
+			DE_req = (0.0363 * BodyWeight ) * 1.9;		
+			CP_req = (1.26 * BodyWeight) + (0.354 * BodyWeight) + (SweatLoss * 7.8 * 2.0 / 0.79);
+			Ca_req = (0.08 * BodyWeight);
+			P_req = (0.058 * BodyWeight);
+			Mg_req = (0.03 * BodyWeight);
+			VitE_req = 2.0 * BodyWeight;
+			Thi_req = 0.125 * BodyWeight;
+			Ribo_req = 0.05 * BodyWeight;
+		}
+		LYS_req = 0.043 * CP_req;
+		K_req = 0.05 * BodyWeight + 2.8 * SweatLoss;  
+		Na_req = 0.02 * BodyWeight + 3.1 * SweatLoss;
+		Cl_req = 0.08 * BodyWeight + 5.3 * SweatLoss;
+		S_req = 1.5 * DM_req;
+		Co_req = 0.05 * DM_req;
+		Cu_req = 10.0 * DM_req;
+		I_req = 0.35 * DM_req;
+		Fe_req = 40 * DM_req;
+		Mn_req = 40 * DM_req;
+		Zn_req = 40 * DM_req;
+		Se_req = 0.1 * DM_req;
+		VitA_req = 45 * BodyWeight;
+		VitD_req = 6.6 * BodyWeight;
+	break;
+
+	case "STALLION": 					
+	// Stallion
+		BodyWeight = MatureWeight;
+		DM_req = (IntakeLevel/100) * BodyWeight;
+		if (StallionMaintLevel == 0) 	
+		// Not Breeding
+		{
+			DE_req = 0.0363 * BodyWeight;		
+			CP_req = 1.44 * BodyWeight;
+			Ca_req = 0.04 * BodyWeight;
+			P_req = 0.028 * BodyWeight;
+			Mg_req = 0.015 * BodyWeight;
+			K_req = 0.05 * BodyWeight;
+			Na_req = 0.02 * BodyWeight;
+			Cl_req = 0.08 * BodyWeight;
+			Cu_req = 0.2 * BodyWeight;
+			VitA_req = 30 * BodyWeight;
+			VitE_req = 1.0 * BodyWeight;
+		}
+		if (StallionMaintLevel == 1)  	
+		// Breeding
+		{
+			SweatLoss = 0.0025 * BodyWeight; // - (Assumes light workload)
+			DE_req = 0.0363 * BodyWeight * 1.2;		
+			CP_req = 1.44 * BodyWeight + (SweatLoss * 7.8 * 2 / 0.79) + 0.089 * BodyWeight;
+			Ca_req = 0.06 * BodyWeight;
+			P_req = 0.036 * BodyWeight;
+			Mg_req = 0.019 * BodyWeight;
+			K_req = 0.05 * BodyWeight +(1.4 / 0.5) * SweatLoss;
+			Na_req = 0.02 * BodyWeight + 3.1 * SweatLoss;
+			Cl_req = 0.08 * BodyWeight + 5.3 * SweatLoss;
+			Cu_req = 10.0 * DM_req;
+			VitA_req = 45 * BodyWeight;
+			VitE_req = 1.6 * BodyWeight;
+		}
+		LYS_req = 0.043 * CP_req;
+		S_req = 1.5 * DM_req;
+		Co_req = 0.05 * DM_req;
+		I_req = 0.35 * DM_req;
+		Fe_req = 40 * DM_req;
+		Mn_req = 40 * DM_req;
+		Zn_req = 40 * DM_req;
+		Se_req = 0.1 * DM_req;
+		VitD_req = 6.6 * BodyWeight;
+		Thi_req = 0.06 * BodyWeight;
+		Ribo_req = 0.04 * BodyWeight;
+	break;
+
+	case "PREGNANT":					
+		// Pregnancy 
+		DM_req = (IntakeLevel/100) * MatureWeight;
+		BodyWeight = MatureWeight;
+		if (MonthOfGest < 5)
+		{
+			FetalMass = 0.0;  
+			PUMass =  0.0;
+			FetalGain =	0.0;
+			DE_req = 0.0333 * BodyWeight;
+			CP_req = 1.26 * BodyWeight;
+			Ca_req = 0.04 * BodyWeight;
+			P_req = 0.028 * BodyWeight;
+			Mg_req = 0.015 * BodyWeight;
+			K_req = 0.05 * BodyWeight;
+			Na_req = 0.02 * BodyWeight;
+			Cl_req = 0.08 * BodyWeight;
+			Cu_req = 0.2 * BodyWeight;
+			I_req = 0.35 * DM_req;
+			Fe_req = 40 * DM_req;
+		} 
+		else 
+		{
+			GestDay = MonthOfGest * 30.4;  
+			BirthWeight = 0.097 * MatureWeight; 
+			FetalMass = (0.0000001 * Math.pow(GestDay, 3.5512)) * 0.01 * BirthWeight;  
+			PUMass = (-0.0135 + (0.00009 * GestDay)) * BodyWeight; 
+			FetalGain =	(0.00000035512 * Math.pow(GestDay, 2.5512)) * 0.01 * BirthWeight + 0.00009 * BodyWeight;  
+			DE_req = (0.0333 * BodyWeight ) + (0.0333 * 2 * (FetalMass+PUMass)) 
+						+ ((0.03 * FetalGain * 9.4)+(0.2*FetalGain*5.6))/0.6; 
+			CP_req = (1.26 * BodyWeight) + (FetalGain * 1000* 2.0 * 0.2 /0.79);
+			if (MonthOfGest < 7) 
+			{
+				Ca_req = 0.04 * BodyWeight;
+				P_req = 0.028 * BodyWeight;
+				Mg_req = 0.015 * BodyWeight;
+				K_req = 0.05 * BodyWeight;
+				Na_req = 0.02 * BodyWeight;
+				Cl_req = 0.08 * BodyWeight;
+				Cu_req = 0.2 * BodyWeight;
+				I_req = 0.35 * DM_req;
+				Fe_req = 40 * DM_req;
+			}
+			else if (MonthOfGest < 9) 
+			{
+				Ca_req = 0.056 * BodyWeight;
+				P_req = 0.04 * BodyWeight;
+				Mg_req = 0.0152 * BodyWeight;
+				K_req = 0.05 * BodyWeight;
+				Na_req = 0.02 * BodyWeight;
+				Cl_req = 0.08 * BodyWeight;
+				Cu_req = 0.2 * BodyWeight;
+				I_req = 0.35 * DM_req;
+				Fe_req = 40 * DM_req;
+			}
+			else 
+			{
+				Ca_req = 0.072 * BodyWeight;
+				P_req = 0.0525 * BodyWeight;
+				Mg_req = 0.0153 * BodyWeight;
+				K_req = 0.0517 * BodyWeight;
+				Na_req = 0.022 * BodyWeight;
+				Cl_req = 0.082 * BodyWeight;
+				Cu_req = 0.25 * BodyWeight;
+				I_req = 0.4 * DM_req;
+				Fe_req = 50 * DM_req;
+			}
+		}
+		LYS_req = 0.043 * CP_req;
+		S_req = 1.5 * DM_req;
+		Co_req = 0.05 * DM_req;
+		Mn_req = 40 * DM_req;
+		Zn_req = 40 * DM_req;
+		Se_req = 0.1 * DM_req;
+		VitA_req = 60 * BodyWeight;
+		VitD_req = 6.6 * BodyWeight;
+		VitE_req = 1.0 * BodyWeight;
+		Thi_req = 0.06 * BodyWeight;
+		Ribo_req = 0.04 * BodyWeight;
+		DailyGain = FetalGain*1.25;
+		BodyWeight = BodyWeight + (FetalMass + PUMass)*1.25;
+	break;
+
+	case "LACTATING":					// Lactating
+		BodyWeight = MatureWeight;
+		DM_req = (IntakeLevel/100) * BodyWeight;
+
+		var MilkVals;
+		var MilkProd;
+		MilkVals = new Array(6);
+		MilkVals[0] = 0.0326;
+		MilkVals[1] = 0.0324;
+		MilkVals[2] = 0.0299;
+		MilkVals[3] = 0.0271;
+		MilkVals[4] = 0.0244;
+		MilkVals[5] = 0.0218;
+		
+		MilkProd = MilkVals[MonthOfLact-1] * BodyWeight;
+
+		if (BodyWeight > 700) {
+			DE_req = (0.0333 * BodyWeight ) + ((MilkProd * 10 * 50)/ (1000 * .6));
+		} else {
+			DE_req = (0.0363 * BodyWeight ) + ((MilkProd * 10 * 50)/ (1000 * .6));
+		}
+
+		CP_req = (1.44 * BodyWeight ) + (MilkProd * 50);
+		LYS_req = (0.043 * 1.44 * BodyWeight) + (MilkProd * 3.3);
+		if (MonthOfLact < 4) 				// Lactation - 'early lact'
+		{
+			Na_req = 0.02 * BodyWeight + (MilkProd * 0.17);
+			Ca_req = (0.04 * BodyWeight) + ((MilkProd * 1.2)/0.5);
+			P_req = (0.01/0.45 * BodyWeight) + ((MilkProd * 0.75)/0.45);
+			Mg_req = (0.015 * BodyWeight) + ((MilkProd * 0.09)/0.4);
+			K_req = (0.05 * BodyWeight) + ((MilkProd * 0.7)/0.5);
+		}
+		else if (MonthOfLact < 6)
+		{
+			Na_req = 0.02 * BodyWeight + (MilkProd * 0.14);
+			Ca_req = (0.04 * BodyWeight) + ((MilkProd * 0.8)/0.5);
+			P_req = (0.01/0.45 * BodyWeight) + ((MilkProd * 0.5)/0.45);
+			Mg_req = (0.015 * BodyWeight) + ((MilkProd * 0.09)/0.4);
+			K_req = (0.05 * BodyWeight) + ((MilkProd * 0.4)/0.5);
+		}
+		else 
+		{
+			Na_req = 0.02 * BodyWeight + (MilkProd * 0.14);
+			Ca_req = (0.04 * BodyWeight) + ((MilkProd * 0.8)/0.5);
+			P_req = (0.01/0.45 * BodyWeight) + ((MilkProd * 0.5)/0.45);
+			Mg_req = (0.015 * BodyWeight) + ((MilkProd * 0.045)/0.4);
+			K_req = (0.05 * BodyWeight) + ((MilkProd * 0.4)/0.5);
+		}
+		Cl_req = 0.091 * BodyWeight;
+		S_req = 1.5 * DM_req;
+		Co_req = 0.05 * DM_req;
+		Cu_req = 0.25 * BodyWeight;
+		I_req =  0.35 * DM_req;
+		Fe_req = 50 * DM_req;
+		Mn_req = 40 * DM_req;
+		Zn_req = 40 * DM_req;
+		Se_req = 0.1 * DM_req;
+		VitA_req = 60 * BodyWeight;
+		VitD_req = 6.6 * BodyWeight;
+		VitE_req = 2.0 * BodyWeight;
+		Thi_req = 0.075 * BodyWeight;
+		Ribo_req = 0.05 * BodyWeight;
+	break;
+
+	case "GROWING":					// Growing Animal 
+		BodyWeight = MatureWeight * (9.7 + (90.3 * (1.0 - (Math.exp(-0.0772 * Age)))))/100.0;
+		DailyGain = MatureWeight * ( 6.97121 * Math.exp(-0.0772 * Age))/(30.4 * 100);
+		DM_req = (IntakeLevel/100) * BodyWeight;
+		if (WorkLoadGrow == 0) 
+		{
+			DE_req = ((56.5*Math.pow(Age,-0.145))/1000)*BodyWeight+(1.99 + 1.21*Age - 0.021*Age*Age)*DailyGain;
+			if (Age < 6.5) {
+				CP_req = 1.44*BodyWeight+((DailyGain*1000*0.2)/0.5)/0.79;
+				Cl_req = 0.093 * BodyWeight;
+		VitD_req = 22.2 * BodyWeight;
+			} else if (Age < 8.5) {
+				CP_req = 1.44*BodyWeight+((DailyGain*1000*0.2)/0.45)/0.79;					
+				Cl_req = 0.085 * BodyWeight;
+		VitD_req = 17.4 * BodyWeight;
+			} else if (Age < 10.5) {
+				CP_req = 1.44*BodyWeight+((DailyGain*1000*0.2)/0.40)/0.79;					
+				Cl_req = 0.085 * BodyWeight;
+		VitD_req = 17.4 * BodyWeight;
+			} else if (Age < 11.5) {
+				CP_req = 1.44*BodyWeight+((DailyGain*1000*0.2)/0.35)/0.79;					
+				Cl_req = 0.085 * BodyWeight;
+		VitD_req = 17.4 * BodyWeight;
+			} else {
+				CP_req = 1.44*BodyWeight+((DailyGain*1000*0.2)/0.3)/0.79;					
+				Cl_req = 0.0825 * BodyWeight;
+				if (Age < 18.5) {
+					VitD_req = 15.9 * BodyWeight;
+				} else {
+					VitD_req = 13.7 * BodyWeight;
+				}
+			}
+			Mg_req = (0.015 * BodyWeight) + (1.25 * DailyGain);
+			K_req = (0.05 * BodyWeight) + (3.0 * DailyGain);
+			Na_req = 0.02 * BodyWeight + (1.0 * DailyGain);
+		}
+
+        
+		if (WorkLoadGrow == 1) 
+		{
+			// Only applied to animals > 12 mo of age
+			SweatLoss = 0.0025 * BodyWeight;
+			DE_req = ((56.5*Math.pow(Age,-0.145))/1000)*1.2*BodyWeight+(1.99+1.21*Age-0.021*Age*Age)*DailyGain;
+			CP_req = 1.44*BodyWeight+((DailyGain*1000*0.2)/0.3)/0.79 + (SweatLoss* 7.8 * 2 / 0.79)+0.089*BodyWeight;					
+			Mg_req = (0.03 * BodyWeight);
+			K_req = (0.05 * BodyWeight) + (3.0 * DailyGain) +(1.4/0.5)*SweatLoss;
+			Na_req = 0.02 * BodyWeight + (1.0 * DailyGain) + 3.1 * SweatLoss;
+			Cl_req = 0.0825 * BodyWeight + 5.3 * SweatLoss;
+				if (Age < 18.5) {
+					VitD_req = 15.9 * BodyWeight;
+				} else {
+					VitD_req = 13.7 * BodyWeight;
+				}
+		}
+		if (WorkLoadGrow == 2) 
+		{
+			// Only applied to animals > 12 mo of age
+			SweatLoss = 0.005 * BodyWeight;
+			DE_req = ((56.5*Math.pow(Age,-0.145))/1000)*1.4*BodyWeight+(1.99 + 1.21*Age - 0.021*Age*Age )*DailyGain;
+			CP_req = 1.44*BodyWeight+((DailyGain*1000*0.2)/0.3)/0.79 + (SweatLoss* 7.8 * 2 / 0.79)+0.177*BodyWeight;					
+			Mg_req = (0.03 * BodyWeight);
+			K_req = (0.05 * BodyWeight) + (3.0 * DailyGain) +(1.4/0.5)*SweatLoss;
+			Na_req = 0.02 * BodyWeight + (1.0 * DailyGain) + 3.1 * SweatLoss;
+			Cl_req = 0.0825 * BodyWeight + 5.3 * SweatLoss;
+				if (Age < 18.5) {
+					VitD_req = 15.9 * BodyWeight;
+				} else {
+					VitD_req = 13.7 * BodyWeight;
+				}
+		}
+		if (WorkLoadGrow == 3) 
+		{
+			// Only applied to animals > 12 mo of age
+			SweatLoss = 0.01 * BodyWeight;
+			DE_req = ((56.5*Math.pow(Age,-0.145))/1000)*1.6*BodyWeight+(1.99 + 1.21*Age - 0.021*Age*Age )*DailyGain;
+			CP_req = 1.44*BodyWeight+((DailyGain*1000*0.2)/0.3)/0.79 + (SweatLoss* 7.8 * 2 / 0.79)+0.266*BodyWeight;					
+			Mg_req = (0.03 * BodyWeight);
+			K_req = (0.05 * BodyWeight) + (3.0 * DailyGain) +(1.4/0.5)*SweatLoss;
+			Na_req = 0.02 * BodyWeight + (1.0 * DailyGain) + 3.1 * SweatLoss;
+			Cl_req = 0.0825 * BodyWeight + 5.3 * SweatLoss;
+				if (Age < 18.5) {
+					VitD_req = 15.9 * BodyWeight;
+				} else {
+					VitD_req = 13.7 * BodyWeight;
+				}
+		}
+		if (WorkLoadGrow == 4) 
+		{
+			// Only applied to animals > 12 mo of age
+			SweatLoss = 0.02 * BodyWeight;
+			DE_req = ((56.5*Math.pow(Age,-0.145))/1000)*1.9*BodyWeight+(1.99 + 1.21*Age - 0.021*Age*Age )*DailyGain;
+			CP_req = 1.44*BodyWeight+((DailyGain*1000*0.2)/0.3)/0.79 + (SweatLoss* 7.8 * 2 / 0.79)+0.354*BodyWeight;					
+			Mg_req = (0.03 * BodyWeight);
+			K_req = (0.05 * BodyWeight) + (3.0 * DailyGain) +(1.4/0.5)*SweatLoss;
+			Na_req = 0.02 * BodyWeight + (1.0 * DailyGain) + 3.1 * SweatLoss;
+			Cl_req = 0.0825 * BodyWeight + 5.3 * SweatLoss;
+				if (Age < 18.5) {
+					VitD_req = 15.9 * BodyWeight;
+				} else {
+					VitD_req = 13.7 * BodyWeight;
+				}
+		}
+
+
+		LYS_req = 0.043 * CP_req;
+		Ca_req = (0.072 * BodyWeight) + (32 * DailyGain);
+		P_req = (0.04 * BodyWeight) + (17.8 * DailyGain);
+		S_req = 1.5 * DM_req;
+		Co_req = 0.05 * DM_req;
+		Cu_req = 0.25 * BodyWeight;
+		I_req = 0.35 * DM_req;
+		Fe_req = 50 * DM_req;
+		Mn_req = 40 * DM_req;
+		Zn_req = 40 * DM_req;
+		Se_req = 0.1 * DM_req;
+		VitA_req = 45 * BodyWeight;
+		VitD_req = 20 * BodyWeight;
+		VitE_req = 2.0 * BodyWeight;
+		Thi_req = 0.075 * BodyWeight;
+		Ribo_req = 0.05 * BodyWeight;
+	break;
+
+	default:
+		alert("Undefined Animal Type");
+	}
+
+	if (AnimalType == "MAINTENANCE") {
+		if(menuState == 1) {
+			eval("document.theform.frm_LevMaint.style.visibility='visible'");
+		}
+		document.theform.frm_DailyGain.value = (0.00).toFixed(2);
+	}
+
+	if (AnimalType == "STALLION") {
+		if(menuState == 1) {
+			eval("document.theform.frm_StallionType.style.visibility='visible'");
+		}
+		document.theform.frm_DailyGain.value = (SweatLoss).toFixed(2);
+	}
+
+	if (AnimalType == "GROWING") {
+		if(menuState == 1) {
+			eval("document.theform.frm_Age2.style.visibility='visible'");
+			eval("document.theform.frm_TxtGrow.style.visibility='visible'");
+			eval("document.theform.frm_DailyGain.style.visibility='visible'");
+			eval("document.theform.frm_txtDailyGain.value='Estimated Weight change, kg/d'");
+			eval("document.theform.frm_txtDailyGain.style.visibility='visible'");
+			if (Age >12) {
+				eval("document.theform.frm_TxtWork_grow.style.visibility='visible'");
+				eval("document.theform.frm_WorkLoad_grow.style.visibility='visible'");
+			}
+		}
+		document.theform.frm_DailyGain.value = DailyGain.toFixed(2);
+	}
+	if (AnimalType == "PREGNANT") {
+		if(menuState == 1) {
+			eval("document.theform.frm_DailyGain.style.visibility='visible'");
+			eval("document.theform.frm_txtDailyGain.value='Estimated Weight change, kg/d'");
+			eval("document.theform.frm_txtDailyGain.style.visibility='visible'");
+			eval("document.theform.frm_MonthOfGest.style.visibility='visible'");
+			eval("document.theform.frm_TxtPreg.style.visibility='visible'");
+		}
+		document.theform.frm_DailyGain.value = (DailyGain).toFixed(2);
+	}
+	if (AnimalType == "LACTATING") {
+		if(menuState == 1) {
+			eval("document.theform.frm_DailyGain.style.visibility='visible'");
+			eval("document.theform.frm_txtDailyGain.style.visibility='visible'");
+			eval("document.theform.frm_txtDailyGain.value='Estimated Milk Production, kg/d'");
+			eval("document.theform.frm_TxtLact.style.visibility='visible'");
+			eval("document.theform.frm_MonthOfLact.style.visibility='visible'");
+		}
+		document.theform.frm_DailyGain.value = MilkProd.toFixed(2);
+	}
+	if (AnimalType == "EXERCISE") {
+		if(menuState == 1) {
+			eval("document.theform.frm_TxtWork.style.visibility='visible'");
+			eval("document.theform.frm_WorkLoad.style.visibility='visible'");
+		}
+	}
+
+	document.theform.frm_Feed_ReqDM.value = DM_req.toFixed(2);
+	document.theform.frm_Feed_ReqDE.value = DE_req.toFixed(2);
+	document.theform.frm_Feed_ReqCP.value = CP_req.toFixed(0);
+	document.theform.frm_Feed_ReqLys.value = LYS_req.toFixed(0);
+	document.theform.frm_Feed_ReqCa.value = Ca_req.toFixed(0);
+	document.theform.frm_Feed_ReqP.value = P_req.toFixed(0);
+	document.theform.frm_Feed_ReqMg.value = Mg_req.toFixed(2);
+	document.theform.frm_Feed_ReqK.value = K_req.toFixed(1);
+	document.theform.frm_Feed_ReqVitA.value = VitA_req.toFixed(0);
+
+	// MinVits
+
+	document.theform.frm_Feed_ReqNa.value = Na_req.toFixed(1);
+	document.theform.frm_Feed_ReqCl.value = Cl_req.toFixed(1);
+	document.theform.frm_Feed_ReqS.value = S_req.toFixed(1);
+	document.theform.frm_Feed_ReqCo.value = Co_req.toFixed(1);
+	document.theform.frm_Feed_ReqCu.value = Cu_req.toFixed(1);
+	document.theform.frm_Feed_ReqI.value = I_req.toFixed(1);
+	document.theform.frm_Feed_ReqFe.value = Fe_req.toFixed(1);
+	document.theform.frm_Feed_ReqMn.value = Mn_req.toFixed(1);
+	document.theform.frm_Feed_ReqZn.value = Zn_req.toFixed(1);
+	document.theform.frm_Feed_ReqSe.value = Se_req.toFixed(2);
+	document.theform.frm_Feed_ReqVitD.value = VitD_req.toFixed(0);
+	document.theform.frm_Feed_ReqVitE.value = VitE_req.toFixed(0);
+	document.theform.frm_Feed_ReqThi.value = Thi_req.toFixed(1);
+	document.theform.frm_Feed_ReqRibo.value = Ribo_req.toFixed(1);
+
+	document.theform.frm_BodyWeight.value = BodyWeight.toFixed(0);
+
+	document.theform.frm_Feed_DenDE.value = (DE_req/ DM_req).toFixed(2);
+	document.theform.frm_Feed_DenCP.value = (CP_req * 0.1 / DM_req).toFixed(1);
+	document.theform.frm_Feed_DenLys.value = (LYS_req * 0.1/ DM_req).toFixed(2);
+	document.theform.frm_Feed_DenCa.value = (Ca_req * 0.1 / DM_req).toFixed(2);
+	document.theform.frm_Feed_DenP.value = (P_req* 0.1/ DM_req).toFixed(2);
+	document.theform.frm_Feed_DenNa.value = (Na_req*0.1/ DM_req).toFixed(2);
+	document.theform.frm_Feed_DenCl.value = (Cl_req*0.1/ DM_req).toFixed(2);
+	document.theform.frm_Feed_DenK.value = (K_req*0.1/ DM_req).toFixed(2);
+
+	tmpDM = document.theform.frm_Feed_TotDM.value - document.theform.frm_Feed_ReqDM.value;
+	tmpDE = document.theform.frm_Feed_TotDE.value - document.theform.frm_Feed_ReqDE.value;
+	tmpCP = document.theform.frm_Feed_TotCP.value - document.theform.frm_Feed_ReqCP.value;
+	tmpLys = document.theform.frm_Feed_TotLys.value - document.theform.frm_Feed_ReqLys.value;
+	tmpCa = document.theform.frm_Feed_TotCa.value - document.theform.frm_Feed_ReqCa.value;
+	tmpP = document.theform.frm_Feed_TotP.value - document.theform.frm_Feed_ReqP.value;
+	tmpNa = document.theform.frm_Feed_TotNa.value - document.theform.frm_Feed_ReqNa.value;
+	tmpCl = document.theform.frm_Feed_TotCl.value - document.theform.frm_Feed_ReqCl.value;
+	tmpK = document.theform.frm_Feed_TotK.value - document.theform.frm_Feed_ReqK.value;
+
+	document.theform.frm_Feed_DiffDM.value = tmpDM.toFixed(2);
+	document.theform.frm_Feed_DiffDE.value = tmpDE.toFixed(2);
+	document.theform.frm_Feed_DiffCP.value = tmpCP.toFixed(0);
+	document.theform.frm_Feed_DiffLys.value = tmpLys.toFixed(0);
+	document.theform.frm_Feed_DiffCa.value = tmpCa.toFixed(0);
+	document.theform.frm_Feed_DiffP.value = tmpP.toFixed(0);
+	document.theform.frm_Feed_DiffNa.value = tmpNa.toFixed(0);
+	document.theform.frm_Feed_DiffCl.value = tmpCl.toFixed(0);
+	document.theform.frm_Feed_DiffK.value = tmpK.toFixed(1);
+
+}
+
+function clrCookies(){
+	deleteCookie("Test");
+	deleteCookie("Sc0");
+	deleteCookie("Sc1");
+	deleteCookie("Sc2");
+}
+
+function testCookie(){
+	var now = new Date();
+	var tmpCookie;
+	var tmpStr;
+	fixDate(now);
+	now.setTime(now.getTime() + 365 * 24 * 60 * 60 * 1000);
+	tmpStr = "";
+	tmpCookie = "A1.25+1234567890123456789012345+92.1+1.58+8.2+0.25+0.24+0.25+0.05+1.4+30000;";
+	tmpStr = tmpCookie+tmpCookie+tmpCookie+tmpCookie+tmpCookie+tmpCookie+tmpCookie+tmpCookie;
+
+	for (var x = 0; x <= 2; x++)
+	{
+		setCookie("Sc"+x,tmpStr,now);
+	}	
+	alert(getCookie("Sc0"));
+}
+
+function testCookie1(){
+	var tmpStr;
+	tmpStr = getCookie("Sc0");
+	alert(tmpStr.length);
+}
+
+function saveScenario(x){
+	var j;
+	var scn;
+	var tmpCookie;
+	var tmpStr;
+	(x) ? scn = x : scn = 0;
+	alert(scn);
+	tmpStr = "";
+	for(j=0;j<8;j++) {
+		tmpStr = tmpStr + "#" + Ration[j];
+	}
+	alert(tmpStr);
+}
+
+function SetGrow(){
+	var Age;
+	var Opt1 = new Option("None","0",false,true);
+	var Opt2 = new Option("Light","1",false,false);
+	var Opt3 = new Option("Moderate","2",false,false);
+	var Opt4 = new Option("Heavy","3",false,false);
+	var Opt5 = new Option("Very Heavy","4",false,false);
+	if(menuState == 1) {
+		Age = parseInt(document.theform.frm_Age2.value);
+		if (Age >12) {
+			eval("document.theform.frm_TxtWork_grow.style.visibility='visible'");
+			eval("document.theform.frm_WorkLoad_grow.style.visibility='visible'");
+			eval("document.theform.frm_WorkLoad_grow.options.length=0")
+			eval("document.theform.frm_WorkLoad_grow.options[document.theform.frm_WorkLoad_grow.options.length]=Opt1");
+			eval("document.theform.frm_WorkLoad_grow.options[document.theform.frm_WorkLoad_grow.options.length]=Opt2");
+			eval("document.theform.frm_WorkLoad_grow.options[document.theform.frm_WorkLoad_grow.options.length]=Opt3");
+			if (Age >18) {
+				eval("document.theform.frm_WorkLoad_grow.options[document.theform.frm_WorkLoad_grow.options.length]=Opt4");
+				eval("document.theform.frm_WorkLoad_grow.options[document.theform.frm_WorkLoad_grow.options.length]=Opt5");
+			}
+		} else {
+// Need to add and test fix to reset on age < 12 - 10/30/2007
+
+//			eval("document.theform.frm_WorkLoad_grow.options.length=0")
+//			eval("document.theform.frm_WorkLoad_grow.options[document.theform.frm_WorkLoad_grow.options.length]=Opt1");
+		}
+	}
+}
+
+function GetFeedname(s) {
+	var tmpArr;
+	tmpArr = s.split(",");
+	return tmpArr[2];
+}
+
+function SetFeedLib(){
+
+FL_Conc[0] = "FD,0.00,Bakery Byproduct Meal,84.7,3.71,12.5,0.36,0.20,0.36,0.72,1.20,0.42";
+FL_Conc[1] = "FD,0.00,Barley Grain - rolled,91.0,3.67,12.4,0.45,0.06,0.39,0.02,0.13,0.56";
+FL_Conc[2] = "FD,0.00,Barley Malt sprouts,90.5,2.87,20.1,0.88,0.24,0.51,0.04,0.39,1.19";
+FL_Conc[3] = "FD,0.00,Beet Sugar Pulp - molassed (3%),88.0,2.84,10.0,0.42,0.89,0.09,0.35,0.17,1.11";
+FL_Conc[4] = "FD,0.00,Beet Sugar Pulp - unmolassed,88.3,2.80,10.0,0.44,0.91,0.09,0.31,0.18,0.96";
+FL_Conc[5] = "FD,0.00,Bread - waste,68.3,3.90,15.0,0.44,0.14,0.20,0.85,0.94,0.23";
+FL_Conc[6] = "FD,0.00,Brewers Grains - Dried,90.7,2.85,29.2,1.19,0.30,0.67,0.04,0.07,0.50";
+FL_Conc[7] = "FD,0.00,Brewers Grains - Wet,21.8,2.80,28.4,0.97,0.35,0.59,0.01,0.12,0.47";
+FL_Conc[8] = "FD,0.00,Canola Meal - mech. Extract,90.3,2.94,37.8,2.12,0.75,1.10,0.07,0.04,1.41";
+FL_Conc[9] = "FD,0.00,Cereal byproduct,88.5,3.86,9.1,0.37,0.17,0.29,0.59,0.69,0.33";
+FL_Conc[10] = "FD,0.00,Citrus Pulp dried,85.8,2.85,6.9,0.18,1.92,0.12,0.06,0.08,1.10";
+FL_Conc[11] = "FD,0.00,Cookie byproduct,90.1,3.71,9.7,0.17,0.23,0.29,0.68,1.20,0.46";
+FL_Conc[12] = "FD,0.00,Corn Dry Distiller Grain+sol,90.2,2.99,29.7,0.67,0.22,0.83,0.30,0.26,1.10";
+FL_Conc[13] = "FD,0.00,Corn Gluten feed - dried,89.4,3.40,23.8,0.65,0.07,1.00,0.13,0.20,1.46";
+FL_Conc[14] = "FD,0.00,Corn Gluten meal - dried,86.4,3.62,65.0,1.10,0.06,0.60,0.05,0.11,0.46";
+FL_Conc[15] = "FD,0.00,Corn Grain - cracked - dry,88.1,3.88,9.4,0.27,0.04,0.30,0.02,0.08,0.42";
+FL_Conc[16] = "FD,0.00,Corn Grain - ground - dry,88.1,3.88,9.1,0.26,0.04,0.30,0.02,0.08,0.42";
+FL_Conc[17] = "FD,0.00,Corn Grain - steam-flaked,88.1,3.88,9.4,0.29,0.04,0.30,0.02,0.08,0.42";
+FL_Conc[18] = "FD,0.00,Corn Grain+cob - dry ground,89.2,3.63,8.6,0.22,0.06,0.29,0.03,0.07,0.49";
+FL_Conc[19] = "FD,0.00,Corn - Hominy,88.5,3.73,11.9,0.44,0.03,0.65,0.01,0.10,0.82";
+FL_Conc[20] = "FD,0.00,Cottonseed - Meal - solv,90.5,2.98,44.9,1.85,0.20,1.15,0.07,0.07,1.64";
+FL_Conc[21] = "FD,0.00,Fish Meal - Anchovy,92.0,4.07,71.2,5.63,4.06,2.69,0.96,0.80,0.79";
+FL_Conc[22] = "FD,0.00,Fish Meal - Menhaden,91.2,4.07,68.5,5.24,5.34,3.05,0.68,0.80,0.74";
+FL_Conc[23] = "FD,0.00,Linseed Meal - solvent,90.3,2.85,32.6,1.20,0.40,0.83,0.09,0.00,1.22";
+FL_Conc[24] = "FD,0.00,Molasses - Beet sugar,77.9,4.06,8.5,0.09,0.15,0.03,1.48,0.00,6.06";
+FL_Conc[25] = "FD,0.00,Molasses - Sugarcane,74.3,4.06,5.8,0.06,1.00,0.10,0.22,0.00,4.01";
+FL_Conc[26] = "FD,0.00,Oats - Grain - rolled,90.0,3.27,13.2,0.55,0.11,0.40,0.03,0.00,0.52";
+FL_Conc[27] = "FD,0.00,Oats - Grain - whole 32/lb per bu,91.0,3.23,13.6,0.55,0.07,0.30,0.06,0.10,0.45";
+FL_Conc[28] = "FD,0.00,Oats - Grain - whole 38/lb per bu,89.0,3.33,13.6,0.55,0.01,0.41,0.02,0.10,0.51";
+FL_Conc[29] = "FD,0.00,Peanut - Meal - solvent,92.3,3.33,51.8,1.73,0.20,0.64,0.03,0.10,1.32";
+FL_Conc[30] = "FD,0.00,Potato Byproduct meal,35.4,3.16,10.5,0.44,0.49,0.29,0.26,0.19,1.04";
+FL_Conc[31] = "FD,0.00,Rice Bran,90.6,3.35,15.5,0.72,0.07,1.78,0.03,0.09,1.57";
+FL_Conc[32] = "FD,0.00,Safflower Meal - solvent,93.5,1.92,29.0,0.92,0.38,0.72,0.04,0.00,1.21";
+FL_Conc[33] = "FD,0.00,Sorghum - Grain - dry rolled,88.6,3.75,11.6,0.28,0.07,0.35,0.01,0.06,0.47";
+FL_Conc[34] = "FD,0.00,Sorghum - Grain - steam-flake,88.6,3.75,11.6,0.28,0.07,0.35,0.01,0.06,0.47";
+FL_Conc[35] = "FD,0.00,Soybean - Meal - expellers,89.6,3.50,46.3,2.90,0.36,0.66,0.04,0.10,2.12";
+FL_Conc[36] = "FD,0.00,Soybean - Meal - nonenz. Brown,89.0,3.55,50.0,2.89,0.39,0.75,0.10,0.00,2.32";
+FL_Conc[37] = "FD,0.00,Soybean - Meal - solv. 44% CP,89.1,3.52,49.9,3.13,0.40,0.71,0.04,0.13,2.22";
+FL_Conc[38] = "FD,0.00,Soybean - Meal - solv. 48% CP,89.5,3.73,53.8,3.38,0.35,0.70,0.03,0.13,2.41";
+FL_Conc[39] = "FD,0.00,Soybean - Seeds - whole,90.0,3.35,39.2,2.34,0.32,0.60,0.01,0.04,1.99";
+FL_Conc[40] = "FD,0.00,Soybean - Seeds - whole heated,91.0,3.26,43.0,2.57,0.26,0.64,0.01,0.06,1.99";
+FL_Conc[41] = "FD,0.00,Sunflower Meal - solvent,92.2,2.42,28.4,1.01,0.48,1.00,0.04,0.12,1.50";
+FL_Conc[42] = "FD,0.00,Wheat Bran,89.1,3.22,17.3,0.70,0.13,1.18,0.04,0.16,1.32";
+FL_Conc[43] = "FD,0.00,Wheat Grain - rolled,89.4,3.83,14.2,0.40,0.05,0.43,0.01,0.11,0.50";
+FL_Conc[44] = "FD,0.00,Wheat Middlings,89.5,3.40,18.5,0.67,0.16,1.02,0.03,0.10,1.38";
+
+FL_Forage[0] = "FD,0.00,Alfalfa Meal - 17% CP,90.3,2.43,19.2,0.83,1.47,0.28,0.10,0.65,2.37";
+FL_Forage[1] = "FD,0.00,Almond Hulls,86.9,2.89,6.5,0.18,0.28,0.13,0.02,0.03,2.62";
+FL_Forage[2] = "FD,0.00,Barley Silage - headed,35.5,2.28,12.0,0.28,0.48,0.30,0.13,0.72,2.43";
+FL_Forage[3] = "FD,0.00,Bermudagrass hay - Coastal,87.1,1.87,10.4,0.36,0.49,0.27,0.17,0.67,1.80";
+FL_Forage[4] = "FD,0.00,Bermudagrass hay - Tifton-85,87.3,1.86,13.7,0.48,0.39,0.22,0.14,0.54,1.40";
+FL_Forage[5] = "FD,0.00,Corn Silage - immature,23.5,2.45,9.7,0.25,0.29,0.24,0.01,0.30,1.30";
+FL_Forage[6] = "FD,0.00,Corn Silage - mature,44.2,2.78,8.5,0.21,0.26,0.25,0.01,0.17,1.10";
+FL_Forage[7] = "FD,0.00,Corn Silage - normal,35.1,2.75,8.8,0.22,0.28,0.26,0.01,0.29,1.20";
+FL_Forage[8] = "FD,0.00,Corn - Yellow - Cobs,90.8,1.76,3.0,0.08,0.10,0.06,0.04,0.00,0.90";
+FL_Forage[9] = "FD,0.00,Cottonseed - Hulls,89.0,1.69,6.2,0.29,0.18,0.12,0.02,0.06,1.16";
+FL_Forage[10] = "FD,0.00,Cottonseed - Whole with lint,90.1,2.89,23.5,1.02,0.17,0.60,0.02,0.06,1.13";
+FL_Forage[11] = "FD,0.00,Grass Hay - cool season -  mature,84.4,2.04,10.8,0.38,0.47,0.26,0.02,0.66,1.97";
+FL_Forage[12] = "FD,0.00,Grass Hay - cool season - immature,84.0,2.36,18.0,0.63,0.72,0.34,0.03,0.42,2.57";
+FL_Forage[13] = "FD,0.00,Grass Hay - cool season - mid-mat.,83.8,2.18,13.3,0.46,0.66,0.29,0.08,0.92,2.13";
+FL_Forage[14] = "FD,0.00,Grass Pasture - cool season - veg.,20.1,2.39,26.5,0.92,0.56,0.44,0.02,0.56,3.36";
+FL_Forage[15] = "FD,0.00,Grass silage - cool season - immature,36.2,2.30,16.8,0.55,0.57,0.36,0.05,0.67,3.11";
+FL_Forage[16] = "FD,0.00,Grass Silage - cool season - mature,38.7,1.98,12.7,0.43,0.56,0.31,0.05,0.89,2.42";
+FL_Forage[17] = "FD,0.00,Grass Silage - cool season - mid mat.,42.0,2.16,16.8,0.55,0.60,0.36,0.05,0.67,2.78";
+FL_Forage[18] = "FD,0.00,Legume Forage Hay - immature,84.2,2.62,20.5,1.05,1.56,0.31,0.03,0.55,2.56";
+FL_Forage[19] = "FD,0.00,Legume Forage Hay - mature,83.8,2.21,17.8,0.89,1.22,0.28,0.02,0.48,2.38";
+FL_Forage[20] = "FD,0.00,Legume Forage Hay - mid-mat.,83.9,2.43,20.8,1.06,1.37,0.30,0.02,0.61,2.45";
+FL_Forage[21] = "FD,0.00,Legume Forage Pasture - veg.,21.4,2.71,26.5,1.37,1.31,0.37,0.01,0.60,3.21";
+FL_Forage[22] = "FD,0.00,Legume Forage Sil. - mid-mat.,42.9,2.35,21.9,0.97,1.36,0.35,0.02,0.61,3.00";
+FL_Forage[23] = "FD,0.00,Legume Forage Silage - immat.,41.2,2.52,23.2,1.04,1.39,0.36,0.03,0.55,3.03";
+FL_Forage[24] = "FD,0.00,Legume Forage Silage - mature,42.6,2.19,20.3,0.87,1.30,0.33,0.02,0.48,2.87";
+FL_Forage[25] = "FD,0.00,Mix Grass+Leg. Hay - mid-mat.,85.3,2.30,18.4,0.79,1.04,0.32,0.03,0.80,2.59";
+FL_Forage[26] = "FD,0.00,Mix Grass+Leg. Sil. - immature,45.9,2.39,20.3,0.78,1.08,0.35,0.01,1.77,2.89";
+FL_Forage[27] = "FD,0.00,Mix Grass+Leg. Sil. - mature,42.8,2.07,17.4,0.67,1.06,0.33,0.02,0.52,2.70";
+FL_Forage[28] = "FD,0.00,Mix Grass+Leg. Sil. - midmat.,44.1,2.25,19.1,0.74,1.09,0.35,0.01,1.10,2.80";
+FL_Forage[29] = "FD,0.00,Mix Grass+Legume Hay -  mature,89.7,2.11,18.2,0.77,0.97,0.37,0.01,0.93,2.24";
+FL_Forage[30] = "FD,0.00,Mix Grass+Legume Hay - immat.,83.1,2.46,19.7,0.85,1.20,0.31,0.07,0.50,3.06";
+FL_Forage[31] = "FD,0.00,Mostly Grass Hay - immature,84.3,2.35,18.4,0.72,1.01,0.31,0.03,0.74,2.83";
+FL_Forage[32] = "FD,0.00,Mostly Grass Hay - mature,84.7,2.08,13.3,0.51,0.73,0.27,0.10,0.71,2.09";
+FL_Forage[33] = "FD,0.00,Mostly Grass Hay - mid-mat.,87.3,2.19,17.4,0.68,0.88,0.36,0.01,0.77,2.45";
+FL_Forage[34] = "FD,0.00,Mostly Grass Sil. - mid-mat.,44.5,2.19,17.6,0.63,0.89,0.36,0.01,0.45,2.64";
+FL_Forage[35] = "FD,0.00,Mostly Grass Silage - immat.,47.1,2.34,18.0,0.64,1.02,0.34,0.03,0.74,2.88";
+FL_Forage[36] = "FD,0.00,Mostly Grass Silage - mature,38.5,2.01,15.4,0.55,0.85,0.33,0.10,0.90,2.50";
+FL_Forage[37] = "FD,0.00,Mostly Legume Hay - immature,83.8,2.49,20.5,0.97,1.30,0.30,0.03,0.60,2.41";
+FL_Forage[38] = "FD,0.00,Mostly Legume Hay - mature,84.3,2.20,17.2,0.80,1.09,0.28,0.01,0.21,2.23";
+FL_Forage[39] = "FD,0.00,Mostly Legume Hay - mid-mat.,84.2,2.35,19.1,0.90,1.17,0.30,0.08,0.43,2.34";
+FL_Forage[40] = "FD,0.00,Mostly Legume Sil. - immature,43.2,2.38,20.0,0.84,1.16,0.36,0.01,0.60,2.95";
+FL_Forage[41] = "FD,0.00,Mostly Legume Sil. - mid-mat.,43.3,2.27,19.0,0.78,1.14,0.34,0.01,0.60,2.88";
+FL_Forage[42] = "FD,0.00,Mostly Legume Silage - mature,42.9,2.11,18.3,0.74,1.17,0.33,0.03,0.60,2.77";
+FL_Forage[43] = "FD,0.00,Oats - Hay - headed,85.0,2.16,9.1,0.32,0.37,0.22,0.33,1.08,2.01";
+FL_Forage[44] = "FD,0.00,Oats - Silage - headed,34.6,2.04,12.9,0.46,0.52,0.31,0.24,1.34,2.89";
+FL_Forage[45] = "FD,0.00,Rye - Annual - Silage - veg.,29.7,2.12,16.1,0.38,0.43,0.42,0.05,0.90,3.34";
+FL_Forage[46] = "FD,0.00,Sorghum - Grain Type - Silage,28.8,2.17,9.1,0.24,0.50,0.21,0.02,0.60,1.75";
+FL_Forage[47] = "FD,0.00,Sorghum - Sudan Type - Hay,86.5,2.00,9.4,0.33,0.54,0.20,0.03,1.16,2.36";
+FL_Forage[48] = "FD,0.00,Sorghum - Sudan Type - Silage,28.8,1.95,10.8,0.36,0.64,0.24,0.03,0.56,2.57";
+FL_Forage[49] = "FD,0.00,Soybean - Hulls,90.9,2.25,13.9,0.87,0.63,0.17,0.01,0.05,1.51";
+FL_Forage[50] = "FD,0.00,Soybean - Silage - early mat.,40.4,2.26,17.4,0.78,1.07,0.37,0.01,0.00,2.25";
+FL_Forage[51] = "FD,0.00,Triticale Silage - headed,32.0,2.07,13.8,0.25,0.57,0.33,0.05,0.00,3.01";
+FL_Forage[52] = "FD,0.00,Wheat Hay - headed,86.1,2.14,9.4,0.40,0.31,0.20,0.06,0.38,1.71";
+FL_Forage[53] = "FD,0.00,Wheat Silage - early head,33.3,2.11,12.0,0.51,0.38,0.29,0.07,0.83,2.28";
+
+FL_hiFat[0] = "FD,0.00,Hydrol. Tallow fatty acids,99.8,9.12,0.0,0.00,0.00,0.00,0.00,0.00,0.00";
+FL_hiFat[1] = "FD,0.00,Partial hydrogenated tallow,100.0,9.15,0.0,0.00,0.00,0.00,0.00,0.00,0.00";
+FL_hiFat[2] = "FD,0.00,Tallow,99.8,9.18,0.0,0.00,0.00,0.00,0.00,0.00,0.00";
+FL_hiFat[3] = "FD,0.00,Vegetable oil,100.0,9.19,0.0,0.00,0.00,0.00,0.00,0.00,0.00";
+
+FL_MinVit[0] = "FD,0.00,Ammonium Phosphate (Di-),100.0,0.00,115.9,0.00,0.52,20.60,0.05,0.00,0.01";
+FL_MinVit[1] = "FD,0.00,Ammonium Phosphate (Mono-),100.0,0.00,70.9,0.00,0.28,24.74,0.06,0.00,0.01";
+FL_MinVit[2] = "FD,0.00,Ammonium Sulfate,100.0,0.00,134.1,0.00,0.00,0.00,0.00,0.00,0.00";
+FL_MinVit[3] = "FD,0.00,Bone Meal,96.0,0.00,12.0,0.00,24.00,12.00,5.69,0.00,0.19";
+FL_MinVit[4] = "FD,0.00,Calcium Carbonate,100.0,0.00,0.00,0.00,39.00,0.04,0.06,0.00,0.06";
+FL_MinVit[5] = "FD,0.00,Calcium Chloride (2H2O - 77-80% CaCl2),100.0,0.00,0.00,0.00,28.00,0.00,0.00,49.00,0.00";
+FL_MinVit[6] = "FD,0.00,Calcium Chloride (Anhydrous - 94-97% CaCl2),100.0,0.00,0.00,0.00,34.30,0.00,0.00,61.00,0.00";
+FL_MinVit[7] = "FD,0.00,Calcium Hydroxide,100.0,0.00,0.00,0.00,54.00,0.00,0.00,0.00,0.00";
+FL_MinVit[8] = "FD,0.00,Calcium Iodate,100.0,0.00,0.00,0.00,10.00,0.00,0.00,0.00,0.00";
+FL_MinVit[9] = "FD,0.00,Calcium Phosphate (Di-),100.0,0.00,0.00,0.00,22.00,19.30,0.05,0.00,0.07";
+FL_MinVit[10] = "FD,0.00,Calcium Phosphate (Mono-),100.0,0.00,0.00,0.00,16.40,21.60,0.06,0.00,0.08";
+FL_MinVit[11] = "FD,0.00,Calcium Sulfate (2H2O - 74% CaSO4),97.0,0.00,0.00,0.00,22.00,0.00,0.00,0.00,0.00";
+FL_MinVit[12] = "FD,0.00,Cobalt Carbonate,100.0,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00";
+FL_MinVit[13] = "FD,0.00,Cobalt Carbonate (6 H2O),100.0,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00";
+FL_MinVit[14] = "FD,0.00,Cobalt Dichloride,100.0,0.00,0.00,0.00,0.00,0.00,0.00,55.00,0.00";
+FL_MinVit[15] = "FD,0.00,Cobalt Sulfate (7H2O),100.0,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00";
+FL_MinVit[16] = "FD,0.00,Cobalt Sulfate (H2O),100.0,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00";
+FL_MinVit[17] = "FD,0.00,Copper Chloride,100.0,0.00,0.00,0.00,0.00,0.00,0.00,18.00,0.00";
+FL_MinVit[18] = "FD,0.00,Copper Oxide,100.0,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00";
+FL_MinVit[19] = "FD,0.00,Copper Sulfate (5H2O),100.0,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00";
+FL_MinVit[20] = "FD,0.00,Ferrous Carbonate,100.0,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00";
+FL_MinVit[21] = "FD,0.00,Ferrous Sulfate (7H2O),100.0,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00";
+FL_MinVit[22] = "FD,0.00,Ferrous Sulfate (H2O),100.0,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00";
+FL_MinVit[23] = "FD,0.00,Iron Oxide,100.0,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00";
+FL_MinVit[24] = "FD,0.00,Limestone,100.0,0.00,0.00,0.00,38.00,0.02,0.06,0.03,0.12";
+FL_MinVit[25] = "FD,0.00,Limestone (Magnesium),99.0,0.00,0.00,0.00,22.30,0.04,0.00,0.12,0.36";
+FL_MinVit[26] = "FD,0.00,Magnesium Carbonate,98.0,0.00,0.00,0.00,0.02,0.00,0.00,0.00,0.00";
+FL_MinVit[27] = "FD,0.00,Magnesium Chloride (6H2O),100.0,0.00,0.00,0.00,0.00,0.00,0.00,34.90,0.00";
+FL_MinVit[28] = "FD,0.00,Magnesium Hydroxide,100.0,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00";
+FL_MinVit[29] = "FD,0.00,Magnesium Oxide,100.0,0.00,0.00,0.00,3.07,0.00,0.00,0.00,0.00";
+FL_MinVit[30] = "FD,0.00,Magnesium Oxide (Ore),98.0,0.00,0.00,0.00,0.02,0.00,0.00,0.00,0.00";
+FL_MinVit[31] = "FD,0.00,Magnesium Oxide (Seawater),98.0,0.00,0.00,0.00,0.02,0.00,0.00,0.00,0.00";
+FL_MinVit[32] = "FD,0.00,Magnesium Sulfate (7H2O - Epsom Salts),98.0,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00";
+FL_MinVit[33] = "FD,0.00,Magnesium Sulfate (H2O),98.0,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00";
+FL_MinVit[34] = "FD,0.00,Manganese Carbonate,100.0,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00";
+FL_MinVit[35] = "FD,0.00,Manganese Chloride,100.0,0.00,0.00,0.00,0.00,0.00,0.00,56.00,0.00";
+FL_MinVit[36] = "FD,0.00,Manganese Chloride (4H2O),100.0,0.00,0.00,0.00,0.00,0.00,0.00,35.80,0.00";
+FL_MinVit[37] = "FD,0.00,Manganese Sulfate,100.0,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00";
+FL_MinVit[38] = "FD,0.00,Manganese Sulfate (5H2O),100.0,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00";
+FL_MinVit[39] = "FD,0.00,Manganese Sulfate (H2O),100.0,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00";
+FL_MinVit[40] = "FD,0.00,Manganous Oxide,100.0,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00";
+FL_MinVit[41] = "FD,0.00,MonoSodium Phosphate (1 H2O),100.0,0.00,0.00,0.00,0.00,22.50,16.68,0.00,0.00";
+FL_MinVit[42] = "FD,0.00,Oystershell Ground,100.0,0.00,0.00,0.00,38.00,0.07,0.21,0.01,0.10";
+FL_MinVit[43] = "FD,0.00,Phosphate Deflourinated,100.0,0.00,0.00,0.00,32.00,18.00,4.90,0.00,0.08";
+FL_MinVit[44] = "FD,0.00,Phosphate Rock,100.0,0.00,0.00,0.00,35.00,13.00,0.03,0.00,0.06";
+FL_MinVit[45] = "FD,0.00,Phosphate Rock (Low Fl),100.0,0.00,0.00,0.00,35.00,14.00,0.00,0.00,0.00";
+FL_MinVit[46] = "FD,0.00,Phosphate Rock (Soft),100.0,0.00,0.00,0.00,17.00,9.00,0.10,0.00,0.00";
+FL_MinVit[47] = "FD,0.00,Phosphoric Acid,100.0,0.00,0.00,0.00,0.05,31.60,0.04,0.00,0.02";
+FL_MinVit[48] = "FD,0.00,Potassium Bicarbonate,100.0,0.00,0.00,0.00,0.00,0.00,0.00,0.00,39.05";
+FL_MinVit[49] = "FD,0.00,Potassium Carbonate,100.0,0.00,0.00,0.00,0.00,0.00,0.00,0.00,56.00";
+FL_MinVit[50] = "FD,0.00,Potassium Chloride,100.0,0.00,0.00,0.00,0.05,0.00,1.00,47.30,50.00";
+FL_MinVit[51] = "FD,0.00,Potassium Iodide,100.0,0.00,0.00,0.00,0.00,0.00,0.00,0.00,21.00";
+FL_MinVit[52] = "FD,0.00,Potassium Sulfate,100.0,0.00,0.00,0.00,0.15,0.00,0.09,1.55,41.84";
+FL_MinVit[53] = "FD,0.00,Salt,100.0,0.00,0.00,0.00,0.00,0.00,39.34,60.66,0.00";
+FL_MinVit[54] = "FD,0.00,Sodium Bicarbonate,100.0,0.00,0.00,0.00,0.00,0.00,27.00,0.00,0.00";
+FL_MinVit[55] = "FD,0.00,Sodium Carbonate (H2O),100.0,0.00,0.00,0.00,0.00,0.00,36.50,0.00,0.00";
+FL_MinVit[56] = "FD,0.00,Sodium Phosphate (TriPoly-),100.0,0.00,0.00,0.00,0.00,25.00,31.00,0.00,0.00";
+FL_MinVit[57] = "FD,0.00,Sodium Selenate,100.0,0.00,0.00,0.00,0.00,0.00,22.00,0.00,0.00";
+FL_MinVit[58] = "FD,0.00,Sodium Selenite,100.0,0.00,0.00,0.00,0.00,0.00,26.60,0.00,0.00";
+FL_MinVit[59] = "FD,0.00,Sodium Selenite (Na2SeO3),100.0,0.00,0.00,0.00,0.00,0.00,26.60,0.00,0.00";
+FL_MinVit[60] = "FD,0.00,Sodium Sesquicarbonate (2H2O),100.0,0.00,0.00,0.00,0.00,0.00,30.20,0.00,0.00";
+FL_MinVit[61] = "FD,0.00,Sodium Sulfate (10 H2O),100.0,0.00,0.00,0.00,0.00,0.00,14.20,0.00,0.00";
+FL_MinVit[62] = "FD,0.00,Urea,100.0,0.00,281.0,0.00,0.00,0.00,0.00,0.00,0.00";
+FL_MinVit[63] = "FD,0.00,Zinc Carbonate,100.0,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00";
+FL_MinVit[64] = "FD,0.00,Zinc Chloride,100.0,0.00,0.00,0.00,0.00,0.00,0.00,52.00,0.00";
+FL_MinVit[65] = "FD,0.00,Zinc Oxide,100.0,0.00,0.00,0.00,0.00,0.00,0.00,0.00,0.00";
+FL_MinVit[66] = "FD,0.00,Zinc Sulfate (H2O - 89% ZnSO4),100.0,0.00,0.00,0.00,0.02,0.00,0.00,0.02,0.00";
+
+}
+
+addEvent = function(o, e, f, s){
+    var r = o[r = "_" + (e = "on" + e)] = o[r] || (o[e] ? [[o[e], o]] : []), a, c, d;
+    r[r.length] = [f, s || o], o[e] = function(e){
+        try{
+            (e = e || event).preventDefault || (e.preventDefault = function(){e.returnValue = false;});
+            e.stopPropagation || (e.stopPropagation = function(){e.cancelBubble = true;});
+            e.target || (e.target = e.srcElement || null);
+            e.key = (e.which + 1 || e.keyCode + 1) - 1 || 0;
+        }catch(f){}
+        for(d = 1, f = r.length; f; r[--f] && (a = r[f][0], o = r[f][1], a.call ? c = a.call(o, e) : (o._ = a, c = o._(e), o._ = null), d &= c !== false));
+        return e = null, !!d;
+    }
+};
+
+removeEvent = function(o, e, f, s){
+    for(var i = (e = o["_on" + e] || []).length; i;)
+        if(e[--i] && e[i][0] == f && (s || o) == e[i][1])
+            return delete e[i];
+    return false;
+};
+
+enterAsTab = function(){
+    function next(e){
+        var l, i, f, j, o = e.target;
+        if(e.key == 13 && !/textarea|select/i.test(o.type)){
+            for(i = l = (f = o.form.elements).length; f[--i] != o;);
+            for(j = i; (j = (j + 1) % l) != i && (!f[j].type || f[j].disabled || f[j].readOnly || f[j].type.toLowerCase() == "hidden"););                
+            e.preventDefault(), j != i && f[j].focus();
+        }
+    }
+    for(var f, i = (f = document.forms).length; i; addEvent(f[--i], "keypress", next));
+};
+
+//  End -->
+
+</script>
+
+<footer class="text-muted py-5">
+  <div class="container">
+    <p class="float-end mb-1">
+      <a href="#">Volver arriba</a>
+    </p>
+    <p class="mb-1">Jonas A. Reyes C. | WEB Developer &copy; Copyleft, 2022</p>
+    <p class="mb-0">Emprendimiento Tecnológico: <a href="https://codevip.ru">CodeVIP</a> || Telegram: <a href="https://t.me/jonasreyes">@JonasReyes</a>.</p>
+  </div>
+</footer>
+<script src="js/bootstrap.min.js"></script>
+</body>
+</html>
